@@ -1,7 +1,6 @@
 import { Box, Container, Divider, Grid, IconButton, Link, Typography, styled } from '@mui/material';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import React from 'react';
 
 const GridContent = styled("div")(({ theme }) => ({
     position: "relative",

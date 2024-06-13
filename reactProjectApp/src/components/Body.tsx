@@ -2,6 +2,8 @@ import { Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, D
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
 
 
 
@@ -30,20 +32,15 @@ const Overlay = styled("div")(({ theme }) => ({
     left: 0,
     right: 0,
     background: "rgba(0,0,0,.3)"
-
 }));
 
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
     paddingTop: "56.25%",
     height:200
-
-
 }));
 
 const StyledCardContent = styled(CardContent)(({ theme }) => ({
     flexGrow: 1,
-
-
 }));
 
 const cards = [
@@ -138,6 +135,13 @@ const Body = () => {
                                     <Link to={`/item/${card.id}`}>
                                         <Button size='small' color='primary'>Подробнее</Button>
                                     </Link>
+                                        <IconButton 
+                                        size="large"
+                                        aria-label="add item in cart"
+                                        aria-haspopup="false"
+                                        color="inherit">
+                                            <FavoriteIcon/>
+                                        </IconButton>
                                         <IconButton 
                                         size="large"
                                         aria-label="add item in cart"
