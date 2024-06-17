@@ -1,6 +1,7 @@
 import { Box, Container, Divider, Grid, IconButton, Link, Typography, styled } from '@mui/material';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import MapGL from './Map/Maps';
 
 const GridContent = styled("div")(({ theme }) => ({
     position: "relative",
@@ -10,7 +11,7 @@ const GridContent = styled("div")(({ theme }) => ({
 
 const Footer = () => {
     return (
-        <main>
+        <footer>
             <Divider sx={{marginTop: 4}}/>
             <Container fixed sx={{marginTop: 4}}>
                 <Grid container spacing={4}>
@@ -69,7 +70,8 @@ const Footer = () => {
                     </Link>
                 </Box>
             </Container>
-        </main>
+            {/* <MapGL/> */}
+        </footer>
     );
 };
 
