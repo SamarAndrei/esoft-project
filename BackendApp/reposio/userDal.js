@@ -1,4 +1,3 @@
-const { query } = require('express');
 const pool = require('../db');
 
 // type User = {
@@ -14,19 +13,15 @@ class UserModel {
     async create(userData) {
         try {
             const query = pool('users');
-            const user = await query.insert({
-                name: userData.name,
-                email: userData.email,
-                password: userData.password
-            }, ['id', 'name', 'email']);
-            return user;
+            const user = await query.insert(userData);
+            return true;
         } catch (err) {
-            console.error('Error fetching user by ID', err);
+            console.error('Ошибка создания юзера', err);
             throw err; 
         } finally {
-            await pool.destroy();
+            // await pool.destroy();
         }
-    };
+    }; 
 
     async getAll() {
         try {
@@ -37,7 +32,7 @@ class UserModel {
             console.error('Error fetching user by ID', err);
             throw err; 
         } finally {
-            await pool.destroy();
+            // await pool.destroy();
         }
     };
 
@@ -50,7 +45,7 @@ class UserModel {
             console.error('Error fetching user by ID', err);
             throw err; 
         } finally {
-            await pool.destroy();
+            // await pool.destroy();
         }
     };
 
@@ -67,28 +62,24 @@ class UserModel {
             console.error('Error fetching user by ID', err);
             throw err; 
         } finally {
-            await pool.destroy();
+            // await pool.destroy();
         }
     };
 
-    async findByFilter(userData) {
+    async findByEmail(email) {
         try {
             const query = pool('users');
-            const user = await query.where({
-                name: userData.name,
-                email: userData.email,
-                password: userData.password
-              }).select();
-            if (user.length > 0) {
+            const user = await query.where('email', email).first();
+            if (user) {
                 return user;
             } else {
                 return false;
             }
         } catch (err) {
-            console.error('Error fetching user by ID', err);
+            console.error('Error fetching user by Email', err);
             throw err; 
         } finally {
-            await pool.destroy();
+            // await pool.destroy();
         }
     }
 };

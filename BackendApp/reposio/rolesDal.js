@@ -11,7 +11,7 @@ const pool = require('../db');
 
 class RolesModel {
 
-    async findByFilter(id) {
+    async findById(id) {
         try {
             const query = pool('roles');
             const role = await query.where({
@@ -26,7 +26,7 @@ class RolesModel {
             console.error('Error fetching role by ID', err);
             throw err;
         } finally {
-            await pool.destroy();
+            // await pool.destroy();
         }
     }
 };
