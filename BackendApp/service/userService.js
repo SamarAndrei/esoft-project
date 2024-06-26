@@ -17,7 +17,7 @@ class UserService {
             const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
             const newUserData = {
                 name: userData.name,
-                role_id: userData.role_id ? userData.role_id : 2,
+                role_id: userData.role_id ? userData.role_id : process.env.USER_ACCESS_ID, //в отдельную ручку вынести создание админа
                 email: userData.email,
                 password: hashedPassword
             };
@@ -37,8 +37,8 @@ class UserService {
         }
     };
 
-    async getAllUsers() {
-        return this.userModel.getAll();
+    async getAllUsers(offset) {
+        return this.userModel.getAll(offset);
     };
 
     async getUserById(id) {
@@ -46,7 +46,17 @@ class UserService {
     };
 
     async updateUser(id, userData) {
-       return this.userModel.update(id, userData); 
+        let hashedPassword = '';
+        if(userData.password){
+            hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
+        }
+        
+        const newUserData = Object.assign({},
+            userData.name && { name: userData.name },
+            userData.email && { email: userData.email },
+            hashedPassword
+        );        
+        return this.userModel.update(id, newUserData); 
     };
 };
 

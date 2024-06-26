@@ -42,40 +42,42 @@ export async function up(knex: Knex): Promise<void> {
         table.integer('prod_id').notNullable().unsigned().references('id').inTable('production').onDelete('CASCADE');
         table.integer('quantity').defaultTo(0)
         table.timestamp('createdAt').defaultTo(knex.fn.now());;
-        table.unique(['id', 'user_id', 'prod_id']);
+        table.unique(['user_id', 'prod_id']);
 
     })
     .createTable('favourites', function(table) {
         table.increments('id').primary();
         table.integer('user_id').notNullable().unsigned().references('id').inTable('users').onDelete('CASCADE');
         table.integer('prod_id').notNullable().unsigned().references('id').inTable('production').onDelete('CASCADE');
-        table.integer('quantity').defaultTo(0);
         table.timestamp('createdAt').defaultTo(knex.fn.now());
-        table.unique(['id', 'user_id', 'prod_id']);
+        table.unique(['user_id', 'prod_id']);
     })
     .createTable('orders', function(table) {
         table.increments('id').primary();
         table.integer('user_id').notNullable().unsigned().references('id').inTable('users').onDelete('CASCADE');
+        table.specificType('status', 'varchar(55)[]');
+        table.timestamp('updatedAt').defaultTo(knex.fn.now());
         table.timestamp('createdAt').defaultTo(knex.fn.now());
-        table.unique(['id', 'user_id']);
     })
     .createTable('order_items', function(table) {
         table.increments('id').primary();
         table.integer('order_id').notNullable().unsigned().references('id').inTable('orders').onDelete('CASCADE');
         table.integer('prod_id').notNullable().unsigned().references('id').inTable('production').onDelete('CASCADE');
         table.integer('quantity').notNullable().defaultTo(1);
-        table.unique(['id', 'order_id', 'prod_id']);
+        table.unique(['order_id', 'prod_id']);
     });
 }
 
 
 export async function down(knex: Knex): Promise<void> {
-    return knex.schema.dropTableIfExists('users')
-    .dropTableIfExists('production')
-    .dropTableIfExists('comments')
-    .dropTableIfExists('carts')
-    .dropTableIfExists('favourites')
+    return knex.schema
+    .dropTableIfExists('order_items')
     .dropTableIfExists('orders')
-    .dropTableIfExists('order_items');
+    .dropTableIfExists('favourites')
+    .dropTableIfExists('cart_items')
+    .dropTableIfExists('comments')
+    .dropTableIfExists('production')
+    .dropTableIfExists('users')
+    .dropTableIfExists('roles');
 }
 

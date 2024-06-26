@@ -1,19 +1,19 @@
-const { validationResult } = require('express-validator')
+const { validationResult } = require('express-validator');
 
 
 class UserController {
     constructor(userService) {
         this.userService = userService;
-    }
+    };
 
     getAllUsers = async (req, res) => {
         try {
-            const users = await this.userService.getAllUsers();
+            const users = await this.userService.getAllUsers(req.body.offset);
             res.status(200).json(users);
         } catch (error) {
             res.status(500).send(error.message);
         }
-    }
+    };
     
     getUserById = async (req, res) => {
         try {
@@ -28,7 +28,7 @@ class UserController {
         } catch (error) {
             res.status(500).send(error.message);
         }
-    }
+    };
     
     registration = async (req, res) => {
         try {
@@ -51,7 +51,7 @@ class UserController {
         } catch (error) {
             res.status(400).send(error.message);
         }
-    }
+    };
 
     updateUser = async (req, res) => {
         try {
@@ -66,7 +66,7 @@ class UserController {
         } catch (error) {
             res.status(500).send(error.message);
         }
-    }
+    };
 }
 
 module.exports = UserController;

@@ -12,8 +12,8 @@ module.exports = (userContoller) => {
     ], userContoller.registration);
     router.post('/login', userContoller.login);
     router.get('/users', authorizeRole(['admin']), userContoller.getAllUsers);
-    router.get('/users/:id', userContoller.getUserById);
-    router.put('/users/:id',authenticateJWT, userContoller.updateUser);
+    router.get('/users/:id', authenticateJWT, userContoller.getUserById);
+    router.put('/users/:id', authenticateJWT, userContoller.updateUser);
 
     return router;
-}
+};

@@ -1,4 +1,8 @@
 const pool = require('../db');
+// const redis = require('redis');
+// const util = require('util');
+// const red = require('../redis');
+
 
 // type User = {
 //     user_id: number,
@@ -10,6 +14,7 @@ const pool = require('../db');
 // };
 
 class UserModel {
+
     async create(userData) {
         try {
             const query = pool('users');
@@ -23,11 +28,18 @@ class UserModel {
         }
     }; 
 
-    async getAll() {
+    async getAll(offset) {
+        const cacheKey = `users:all:15:${offset}`;
         try {
-            const query = pool('users');
-            const users = await query.select('*').from('users');
-            return users;
+            // const cachedUsers = await red.getAsync(cacheKey);
+            // if (cachedUsers) {
+                // return JSON.parse(cachedUsers);
+            // } else {
+                const query = pool('users');
+                const users = await query.select('*').from('users').limit(15).offset(offset);
+                // await red.setAsync(cacheKey, JSON.stringify(users), 'EX', 10);
+                return users;
+            // }
         } catch (err) {
             console.error('Error fetching user by ID', err);
             throw err; 
@@ -81,7 +93,7 @@ class UserModel {
         } finally {
             // await pool.destroy();
         }
-    }
+    };
 };
 
 module.exports = new UserModel();
