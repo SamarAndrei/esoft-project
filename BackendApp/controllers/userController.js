@@ -44,6 +44,20 @@ class UserController {
         }
     };
 
+    createRole = async (req, res) => {
+        try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({message: "Ошибка при регистрации", errors})
+            }
+
+            const newUser = await this.userService.createRole(req.body);
+            res.status(200).json(newUser);
+        } catch (error) {
+            res.status(400).send(error.message);
+        }
+    };
+
     login = async (req, res) => {
         try {
             const user = await this.userService.login(req.body);

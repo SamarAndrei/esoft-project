@@ -17,11 +17,28 @@ class UserService {
             const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
             const newUserData = {
                 name: userData.name,
-                role_id: userData.role_id ? userData.role_id : process.env.USER_ACCESS_ID, //в отдельную ручку вынести создание админа
+                role_id: process.env.USER_ACCESS_ID,
                 email: userData.email,
                 password: hashedPassword
             };
             return this.userModel.create(newUserData);
+        }
+    };
+
+    async createRole(userData) {
+        const existingUser = await this.userModel.findByEmail(userData.email)
+
+        if(existingUser) {
+            throw new Error('Юзер существует')
+        } else {
+            const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
+            const newUserData = {
+                name: userData.name,
+                role_id: userData.role_id ? userData.role_id : process.env.USER_ACCESS_ID,
+                email: userData.email,
+                password: hashedPassword
+            };
+            return this.userModel.createRole(newUserData);
         }
     };
 
@@ -50,7 +67,7 @@ class UserService {
         if(userData.password){
             hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
         }
-        
+
         const newUserData = Object.assign({},
             userData.name && { name: userData.name },
             userData.email && { email: userData.email },

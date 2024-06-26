@@ -28,6 +28,19 @@ class UserModel {
         }
     }; 
 
+    async createRole(userData) {
+        try {
+            const query = pool('users');
+            const user = await query.insert(userData);
+            return true;
+        } catch (err) {
+            console.error('Ошибка создания юзера', err);
+            throw err; 
+        } finally {
+            // await pool.destroy();
+        }
+    }; 
+
     async getAll(offset) {
         const cacheKey = `users:all:15:${offset}`;
         try {

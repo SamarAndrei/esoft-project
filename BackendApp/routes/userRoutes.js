@@ -11,6 +11,10 @@ module.exports = (userContoller) => {
         check('password', "Пароль должен быть больше 8").isLength({min:8})
     ], userContoller.registration);
     router.post('/login', userContoller.login);
+    router.post('/creatingRole', [
+        check('name', 'Имя не может быть пустым').notEmpty(),
+        check('password', "Пароль должен быть больше 8").isLength({min:8})
+    ], authorizeRole(['admin']), userContoller.createRole);
     router.get('/users', authorizeRole(['admin']), userContoller.getAllUsers);
     router.get('/users/:id', authenticateJWT, userContoller.getUserById);
     router.put('/users/:id', authenticateJWT, userContoller.updateUser);
