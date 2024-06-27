@@ -12,6 +12,8 @@ module.exports = (userContoller) => {
         body('password', "Пароль должен быть больше 8").isLength({min:8})
     ], userContoller.registration);
     router.post('/login', userContoller.login);
+    router.get('/logout', userContoller.logout);
+    router.get('/refresh', userContoller.refresh);
     router.post('/creatingRole', [
         body('name', 'Имя не может быть пустым').notEmpty(),
         body('password', "Пароль должен быть больше 8").isLength({min:8})

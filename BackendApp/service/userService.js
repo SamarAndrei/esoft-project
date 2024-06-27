@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
 const TokenService = require('./tokenService');
 const ApiError = require('../exceptions/api_error');
 
@@ -65,6 +64,29 @@ class UserService {
         } else {
             throw ApiError.BadRequest('Неверный пароль');
         }
+    };
+
+    async refresh(refreshToken) {
+        if (!refreshToken) {
+            throw ApiError.UnauthorizedError();
+        }
+        const userData = TokenService.validateRefreshToken(refreshToken);
+        const tokenFromDb = await TokenService.findToken(userData.id);
+        if (!userData || !tokenFromDb) {
+            throw ApiError.UnauthorizedError();
+        }
+
+        const user = await this.userModel.getById(userData.id);
+        const role = await this.rolesModel.findById(user.role_id);
+
+        const tokens = TokenService.generateTokens({ id: user.id, name: user.name, role: role.name});
+        await TokenService.saveToken(user.id, tokens.refreshToken);
+
+        return {...tokens};
+    };
+
+    async logout(refreshToken) {
+        await TokenService.removeToken(refreshToken);
     };
 
     async getAllUsers(offset, limit) {

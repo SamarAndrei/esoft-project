@@ -8,7 +8,6 @@ const authorizeRole = (roles) => {
         if (!token) {
             return next(ApiError.UnauthorizedError()); 
         }
-        // Проверяем и расшифровываем токен
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
             if (err) {
                 console.error('Ошибка при расшифровке токена:', err);

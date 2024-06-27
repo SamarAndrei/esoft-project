@@ -72,6 +72,30 @@ class UserController {
         }
     };
 
+    logout = async (req, res, next) => {
+        try {
+            const {refreshToken} = req.cookies;
+            const token = await this.userService.logout(refreshToken)
+            res.clearCookie('refreshToken')
+
+            res.status(200).json(`Успешный выход`);
+        } catch (e) {
+            next(e);
+        }
+    };
+
+    refresh = async (req, res, next) => {
+        try {
+            const {refreshToken} = req.cookies;
+            const tokens = await this.userService.refresh(refreshToken);
+            res.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+
+            res.status(200).json(`Успешный рефреш`);
+        } catch (e) {
+            next(e);
+        }
+    };
+
     updateUser = async (req, res, next) => {
         try {
             const userId = parseInt(req.params.id, 10);

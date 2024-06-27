@@ -25,7 +25,7 @@ module.exports = new class TokenModel {
             const token = await query.where('id', tokenData.id).update({token:tokenData.refreshToken}, ['token']);
             return token;
         } catch (err) {
-            console.error('Error fetching user by user_ID', err);
+            console.error('Error fetching token by ID', err);
             throw err; 
         } finally {
             // await pool.destroy();
@@ -43,6 +43,18 @@ module.exports = new class TokenModel {
         } finally {
             // await pool.destroy();
         }
-    }; 
+    };
+
+    async delete(refreshToken) {
+        try {
+            const query = pool('refresh_tokens');
+            const token = await query.where('token', refreshToken).delete();
+        } catch (err) {
+            console.error('Error fetching token by refreshToken', err);
+            throw err; 
+        } finally {
+            // await pool.destroy();
+        }
+    };
 
 }
