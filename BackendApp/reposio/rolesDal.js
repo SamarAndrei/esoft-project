@@ -16,7 +16,7 @@ class RolesModel {
             const query = pool('roles');
             const role = await query.where({
                 id: id
-              });
+              }).first();
             if (role) {
                 return role;
             } else {

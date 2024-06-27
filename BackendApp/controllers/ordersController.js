@@ -1,22 +1,24 @@
+const ApiError = require('../exceptions/api_error');
+
 class OrderController {
     constructor(orderService) {
         this.orderService = orderService;
     };
 
-    getAllOrders = async (req, res) => {
+    getAllOrders = async (req, res, next) => {
         try {
-            const user_id = parseInt(req.params.user_id, 10);
+            const user_id = parseInt(req.user.id, 10);
 
             const orders = await this.orderService.getAllOrders(user_id);
             res.status(200).json(orders);
-        } catch (error) {
-            res.status(500).send(error.message);
+        } catch (e) {
+            next(e);
         }
     };
     
-    getOrderById = async (req, res) => {
+    getOrderById = async (req, res, next) => {
         try {
-            const order_id = parseInt(req.params.order_id, 10);
+            const order_id = parseInt(req.user.id, 10);
             const user_id = parseInt(req.params.user_id, 10);
 
             const order = await this.orderService.getOrderById(user_id, order_id);
@@ -24,21 +26,22 @@ class OrderController {
             if (order) {
                 res.status(200).json(order);
             } else {
-                res.status(404).send('Заказ не найден');
+                throw ApiError.NotFound(`Заказ не найден`);                
+
             }
-        } catch (error) {
-            res.status(500).send(error.message);
+        } catch (e) {
+            next(e);
         }
     }
     
-    createOrder = async (req, res) => {
+    createOrder = async (req, res, next) => {
         try {
-            const user_id = parseInt(req.params.user_id, 10);
+            const user_id = parseInt(req.user.id, 10);
 
             const newProdItem = await this.orderService.createOrder(req.body, user_id);
             res.status(200).json(newProdItem);
-        } catch (error) {
-            res.status(400).send(error.message);
+        } catch (e) {
+            next(e);
         }
     };
 };

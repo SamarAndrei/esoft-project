@@ -1,9 +1,13 @@
-// const redisClient = redis.createClient({
-//     host: '127.0.0.1',
-//     port: 6379, 
-// });
+const redis = require('redis');
+const util = require('util');
 
-// const getAsync = util.promisify(redisClient.get).bind(redisClient);
-// const setAsync = util.promisify(redisClient.set).bind(redisClient);
+const redisClient = redis.createClient({
+    host: 'localhost',
+    port: 6379,
+    connection_name: 'redis-server',
+});
 
-// module.exports = getAsync, setAsync;
+const getAsync = util.promisify(redisClient.get).bind(redisClient);
+const setAsync = util.promisify(redisClient.set).bind(redisClient);
+
+module.exports = {getAsync, setAsync};

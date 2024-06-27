@@ -19,7 +19,6 @@ class FavouritesModel {
         try {
             const query = pool('favourites');
             const favouriteItem = await query.insert(favouriteData);
-            return true;
         } catch (err) {
             console.error('Ошибка добавления в избранное', err);
             throw err; 
@@ -52,7 +51,6 @@ class FavouritesModel {
         try {
             const query = pool('favourites');
             const deletedItem = await query.where({ user_id: user_id, prod_id: prod_id}).delete();
-            return true;
         } catch (err) {
             console.error('Error fetching favouriteItem by ID', err);
             throw err; 

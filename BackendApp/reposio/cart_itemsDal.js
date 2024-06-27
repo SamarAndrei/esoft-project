@@ -19,7 +19,6 @@ class CartModel {
         try {
             const query = pool('cart_items');
             const cartItem = await query.insert(cartItemData);
-            return true;
         } catch (err) {
             console.error('Ошибка добавления в корзину', err);
             throw err; 
@@ -52,7 +51,6 @@ class CartModel {
         try {
             const query = pool('cart_items');
             const deletedItem = await query.where({ user_id: user_id, prod_id: prod_id}).delete();
-            return true;
         } catch (err) {
             console.error('Error fetching cart_item by ID', err);
             throw err; 

@@ -16,8 +16,8 @@ class ProdService {
         return this.prodModel.create(newProdData); 
     };
 
-    async getAllProd(offset) {
-        return this.prodModel.getAll(offset);
+    async getAllProd(offset, limit) {
+        return this.prodModel.getAll(offset, limit);
     };
 
     async getProdItemById(prod_id) {

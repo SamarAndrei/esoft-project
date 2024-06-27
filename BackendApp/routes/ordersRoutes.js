@@ -5,9 +5,9 @@ const authorizeRole = require('../middleware/roleMiddleware.ts'); /** тольк
 module.exports = (ordersContoller) => {
     const router = express.Router();
 
-    router.post('/users/user_id/orders', authenticateJWT, ordersContoller.createOrder);
-    router.get('/users/user_id/orders',authenticateJWT, ordersContoller.getAllOrders);
-    router.get('/users/user_id/orders/order_id', authenticateJWT, ordersContoller.getOrderById); //и вернуть заказ о отсортировать order_items по order_id
+    router.post('/orders', authenticateJWT, ordersContoller.createOrder);
+    router.get('/orders',authenticateJWT, ordersContoller.getAllOrders);
+    router.get('/orders/order_id', authenticateJWT, ordersContoller.getOrderById); //и вернуть заказ о отсортировать order_items по order_id
 
     return router;
 };

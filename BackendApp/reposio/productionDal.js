@@ -19,7 +19,6 @@ class ProdModel {
         try {
             const query = pool('production');
             const prodItem = await query.insert(prodData);
-            return true;
         } catch (err) {
             console.error('Ошибка создания продукта', err);
             throw err; 
@@ -28,15 +27,15 @@ class ProdModel {
         }
     }; 
 
-    async getAll(offset) {
-        const cacheKey = `users:all:15:${offset}`;
+    async getAll(offset, limit) {
+        // const cacheKey = `users:all:15:${offset}`;
         try {
             // const cachedUsers = await red.getAsync(cacheKey);
             // if (cachedUsers) {
                 // return JSON.parse(cachedUsers);
             // } else {
                 const query = pool('production');
-                const users = await query.select('*').from('production').limit(15).offset(offset);
+                const users = await query.select('*').from('production').limit(limit).offset(offset);
                 // await red.setAsync(cacheKey, JSON.stringify(users), 'EX', 10);
                 return users;
             // }

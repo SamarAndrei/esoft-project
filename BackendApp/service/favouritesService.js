@@ -3,7 +3,7 @@ class FavouritesService {
         this.favoriteModel = favoriteModel;
     };
 
-    async addFavouriteItem(favouriteData, user_id, prod_id) {
+    async addFavouriteItem(user_id, prod_id) {
         const newFavoriteData = {user_id: user_id, prod_id};;
         return this.favoriteModel.create(newFavoriteData); 
     };

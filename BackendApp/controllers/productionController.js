@@ -1,18 +1,20 @@
+const ApiError = require('../exceptions/api_error');
+
 class ProdController {
     constructor(prodService) {
         this.prodService = prodService;
     };
 
-    getAllProd = async (req, res) => {
+    getAllProd = async (req, res, next) => {
         try {
-            const prod = await this.prodService.getAllProd(req.body.offset);
+            const prod = await this.prodService.getAllProd(req.body.offset, req.body.limit);
             res.status(200).json(prod);
-        } catch (error) {
-            res.status(500).send(error.message);
+        } catch (e) {
+            next(e);
         }
     };
     
-    getProdItemById = async (req, res) => {
+    getProdItemById = async (req, res, next) => {
         try {
             const prod_id = parseInt(req.params.prod_id, 10);
             const prodItem = await this.prodService.getProdItemById(prod_id);
@@ -20,25 +22,25 @@ class ProdController {
             if (prodItem) {
                 res.status(200).json(prodItem);
             } else {
-                res.status(404).send('Продукт не найден');
+                throw ApiError.NotFound(`Продукт не найден`);                
             }
-        } catch (error) {
-            res.status(500).send(error.message);
+        } catch (e) {
+            next(e);
         }
     }
     
-    createProdItem = async (req, res) => {
+    createProdItem = async (req, res, next) => {
         try {
             const newProdItem = await this.prodService.createProdItem(req.body);
             res.status(200).json(newProdItem);
-        } catch (error) {
-            res.status(400).send(error.message);
+        } catch (e) {
+            next(e);
         }
     };
 
    
 
-    updateProdItem = async (req, res) => {
+    updateProdItem = async (req, res, next) => {
         try {
             const prod_id = parseInt(req.params.prod_id, 10);
             const updatedProdItem = await this.prodService.updateProdItem(prod_id, req.body);
@@ -46,10 +48,10 @@ class ProdController {
             if (updatedProdItem) {
                 res.status(200).json(updatedProdItem);
             } else {
-                res.status(404).send('Продукт не найден');
+                throw ApiError.NotFound(`Продукт не найден`);                
             }
-        } catch (error) {
-            res.status(500).send(error.message);
+        } catch (e) {
+            next(e);
         }
     };
 };

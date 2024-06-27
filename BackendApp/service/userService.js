@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const TokenService = require('./tokenService');
+const ApiError = require('../exceptions/api_error');
 
 class UserService {
     constructor(userModel, rolesModel) {
@@ -12,7 +14,7 @@ class UserService {
         const existingUser = await this.userModel.findByEmail(userData.email)
 
         if(existingUser) {
-            throw new Error('Юзер существует')
+            throw ApiError.BadRequest(`Пользователь с почтовым адресом ${userData.email} уже существует`)
         } else {
             const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
             const newUserData = {
@@ -21,7 +23,15 @@ class UserService {
                 email: userData.email,
                 password: hashedPassword
             };
-            return this.userModel.create(newUserData);
+            this.userModel.create(newUserData);
+
+            const user = await this.userModel.findByEmail(userData.email);
+            const role = await this.rolesModel.findById(user.role_id);
+
+            const tokens = TokenService.generateTokens({ id: user.id, name: user.name, role: role.name});
+            await TokenService.saveToken(user.id, tokens.refreshToken);
+
+            return {...tokens};
         }
     };
 
@@ -29,7 +39,7 @@ class UserService {
         const existingUser = await this.userModel.findByEmail(userData.email)
 
         if(existingUser) {
-            throw new Error('Юзер существует')
+            throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует`)
         } else {
             const hashedPassword = await bcrypt.hash(userData.password, parseInt(process.env.SALT_ROUNDS));
             const newUserData = {
@@ -38,24 +48,27 @@ class UserService {
                 email: userData.email,
                 password: hashedPassword
             };
-            return this.userModel.createRole(newUserData);
+
+            this.userModel.createRole(newUserData);
         }
     };
 
     async login(userData) {
         const user = await this.userModel.findByEmail(userData.email);
-        const role = await this.rolesModel.findById(user.role_id)
+        const role = await this.rolesModel.findById(user.role_id);
 
         if (user && await bcrypt.compare(userData.password, user.password)) {
-            const token = jwt.sign({ id: user.id, name: user.name, role: role.name}, process.env.SECRET_KEY, { expiresIn: process.env.SESSION_DURATION });
-            return { message: 'Authenticated', token };
+            const tokens = TokenService.generateTokens({ id: user.id, name: user.name, role: role.name});
+            await TokenService.saveToken(user.id, tokens.refreshToken);
+
+            return {...tokens};
         } else {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            throw ApiError.BadRequest('Неверный пароль');
         }
     };
 
-    async getAllUsers(offset) {
-        return this.userModel.getAll(offset);
+    async getAllUsers(offset, limit) {
+        return this.userModel.getAll(offset, limit);
     };
 
     async getUserById(id) {

@@ -1,11 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser')
+const errorMiddleware = require('./middleware/errorMiddleware.ts');
 
 const app = express();
 
 const port = 3000;
 app.use(express.json());
-app.use(cors())
+app.use(cors());
+app.use(cookieParser());
 
 const RolesModel = require('./reposio/rolesDal'); 
 const UserModel = require('./reposio/userDal'); 
@@ -63,22 +66,8 @@ app.use('/api', cartRoutes(cartController));
 app.use('/api', favouritesRoutes(favouritesController));
 app.use('/api', ordersRoutes(ordersController));
 
-
+app.use(errorMiddleware);
 app.listen(port, 'localhost', () => {
     console.log(`Server listening at http://localhost:${port}`)
 });
 
-
-// const CarModel = require('./reposio/carDal'); 
-// const carRoutes = require('./routes/carRoutes');
-// const CarController = require('./controllers/carController');
-// const CarService = require('./services/carService')
-
-
-// const carService = new CarService(CarModel)
-// const carController = new CarController(carService)
-
-// const swaggerJsdoc = require('swagger-jsdoc');
-// const swaggerUi = require('swagger-ui-express');
-
-// app.use('/api', carRoutes(carController));

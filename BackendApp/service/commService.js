@@ -5,8 +5,8 @@ class CommService {
         this.commModel = commModel;
     };
 
-    async getAllComms(offset) {
-        return this.commModel.getAll(offset);
+    async getAllComms(offset, limit) {
+        return this.commModel.getAll(offset, limit);
     };
 
     async getCommsById(prod_id) {

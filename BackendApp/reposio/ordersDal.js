@@ -19,7 +19,6 @@ class OrderModel {
         try { 
             const order = await pool('orders').insert(newOrderData);
             const orderItems = await pool('order_items').insert({order_id: order.id, ...newOrderItemsData});
-            return true;
         } catch (err) {
             console.error('Ошибка создания заказа', err);
             throw err; 
