@@ -1,74 +1,67 @@
-import { Box, Container, Divider, Grid, IconButton, Link, Typography, styled } from '@mui/material';
-import TelegramIcon from '@mui/icons-material/Telegram';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import MapGL from './Map/Maps';
+import {
+    Container,
+    Divider,
+    Grid,
+    Link,
+    Typography,
+    styled,
+} from '@mui/material';
+// import MapGL from './Map/Maps';
+import Socials from './Socials';
 
-const GridContent = styled("div")(({ theme }) => ({
-    position: "relative",
-    marginBottom: theme.spacing(5)
+const GridContent = styled('div')(({ theme }) => ({
+    position: 'relative',
+    marginBottom: theme.spacing(5),
 }));
 
+const linksAbout = [
+    { path: '#', name: 'Ссылка' },
+    { path: '#', name: 'Ссылка' },
+];
+const linksHelp = [
+    { path: '#', name: 'Ссылка' },
+    { path: '#', name: 'Ссылка' },
+    { path: '#', name: 'Ссылка' },
+];
 
 const Footer = () => {
     return (
         <footer>
-            <Divider sx={{marginTop: 4}}/>
-            <Container fixed sx={{marginTop: 4}}>
+            <Divider sx={{ marginTop: 4 }} />
+            <Container fixed sx={{ marginTop: 4 }}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={6}>
                         <GridContent>
                             <Typography variant="h6">О нас</Typography>
-                            <Link href="#" underline="hover" color="inherit">
-                                <Typography>
-                                    Ссылка
-                                </Typography>
-                            </Link>
+                            {linksAbout.map((link, index) => (
+                                <Link
+                                    key={index}
+                                    href={link.path}
+                                    underline="hover"
+                                    color="inherit"
+                                >
+                                    <Typography>{link.name}</Typography>
+                                </Link>
+                            ))}
                         </GridContent>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <GridContent>
                             <Typography variant="h6">Помощь</Typography>
-                            <Link href="#" underline="hover" color="inherit">
-                                <Typography>
-                                    Ссылка
-                                </Typography>
-                            </Link>
-                            <Link href="#" underline="hover" color="inherit">
-                                <Typography>
-                                    Ссылка
-                                </Typography>
-                            </Link>
-                            <Link href="#" underline="hover" color="inherit">
-                                <Typography>
-                                    Ссылка
-                                </Typography>
-                            </Link>
+                            {linksHelp.map((link, index) => (
+                                <Link
+                                    key={index}
+                                    href={link.path}
+                                    underline="hover"
+                                    color="inherit"
+                                >
+                                    <Typography>{link.name}</Typography>
+                                </Link>
+                            ))}
                         </GridContent>
                     </Grid>
-                    
                 </Grid>
-                <Box sx={{marginBottom: 1}}>
-                    <Link href="https://web.telegram.org/" color="inherit">
-                        <IconButton
-                        size="large"
-                        aria-label="telegram"
-                        aria-haspopup="false"
-                        color="inherit"
-                        >
-                            <TelegramIcon/>
-                        </IconButton>
-                    </Link>
-                    <Link href="https://www.youtube.com/" color="inherit">
-                        <IconButton
-                        size="large"
-                        aria-label="youtube"
-                        aria-haspopup="false"
-                        color="inherit"
-                        >
-                            <YouTubeIcon/>
-                        </IconButton>
-                    </Link>
-                </Box>
+                <Socials />
             </Container>
             {/* <MapGL/> */}
         </footer>

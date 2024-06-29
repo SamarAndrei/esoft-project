@@ -5,12 +5,11 @@ import OneItemGrid from '../components/OneItemGrid';
 import withDataFetching from '../components/Preloader';
 
 const OneItem = () => {
-
     return (
         <main>
-            <Header/>
-            <EnhancedOneItemGrid/>
-            <Footer/>
+            <Header />
+            <EnhancedOneItemGrid />
+            <Footer />
         </main>
     );
 };

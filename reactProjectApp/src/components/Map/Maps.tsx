@@ -1,6 +1,5 @@
 export const MAP_CENTER = [65.57591097545233, 57.10454479488743];
 
-
 // const MapGL = () => {
 //     React.useEffect(() => {
 //         const map = new mapgl.Map('map-container', {
@@ -26,28 +25,28 @@ import React, { useRef, useEffect } from 'react';
 import { MapGL } from '@2gis/mapgl';
 
 const MapComponent: React.FC = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<MapGL | null>(null);
+    const mapContainer = useRef<HTMLDivElement>(null);
+    const mapInstance = useRef<MapGL | null>(null);
 
-  useEffect(() => {
-    if (!mapContainer.current) return;
+    useEffect(() => {
+        if (!mapContainer.current) return;
 
-    const map = new MapGL({
-      container: mapContainer.current,
-      center: MAP_CENTER, 
-      zoom: 16, 
-    });
+        const map = new MapGL({
+            container: mapContainer.current,
+            center: MAP_CENTER,
+            zoom: 16,
+        });
 
-    mapInstance.current = map;
+        mapInstance.current = map;
 
-    return () => {
-      map.destroy();
-    };
-  }, []);
+        return () => {
+            map.destroy();
+        };
+    }, []);
 
-  return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
+    return (
+        <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />
+    );
 };
 
 export default MapComponent;
-
-
