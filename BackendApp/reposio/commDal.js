@@ -18,7 +18,7 @@ class CommModel {
     async create(commData) {
         try {
             const query = pool('comments');
-            const comm = await query.insert(commData);
+            await query.insert(commData);
         } catch (err) {
             console.error('Ошибка создания коммента', err);
             throw err; 

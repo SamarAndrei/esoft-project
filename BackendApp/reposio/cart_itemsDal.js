@@ -18,7 +18,7 @@ class CartModel {
     async create(cartItemData) {
         try {
             const query = pool('cart_items');
-            const cartItem = await query.insert(cartItemData);
+            await query.insert(cartItemData);
         } catch (err) {
             console.error('Ошибка добавления в корзину', err);
             throw err; 

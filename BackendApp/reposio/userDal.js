@@ -1,5 +1,4 @@
 const pool = require('../db');
-
 // const { getAsync, setAsync } = require('../redis');
 
 // type User = {
@@ -11,12 +10,14 @@ const pool = require('../db');
 //     registration_date: Date
 // };
 
+
+
 class UserModel {
 
     async create(userData) {
         try {
             const query = pool('users');
-            const user = await query.insert(userData);
+            await query.insert(userData);
         } catch (err) {
             console.error('Ошибка создания юзера', err);
             throw err; 
@@ -72,7 +73,6 @@ class UserModel {
             // if (user) {
             //     await setAsync(redisKey, JSON.stringify(user), 'EX', 10);
             // }
-
             return user;
         } catch (err) {
             console.error('Error fetching user by ID', err);
@@ -103,9 +103,7 @@ class UserModel {
         try {
             const query = pool('users');
             const user = await query.where('email', email).first();
-            if (user) {
-                return user;
-            }
+            return user;
         } catch (err) {
             console.error('Error fetching user by Email', err);
             throw err; 

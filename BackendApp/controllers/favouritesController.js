@@ -14,7 +14,7 @@ class FavouritesController {
             if (favourites) {
                 res.status(200).json(favourites);
             } else {
-                throw ApiError.NotFound(`Избранное не найдено`);                
+                res.status(200).json('Избранного нет');                
             }
         } catch (e) {
             next(e);

@@ -15,7 +15,7 @@ class CartController {
             if (cart) {
                 res.status(200).json(cart);
             } else {
-                throw ApiError.NotFound(`Корзина не найдена`);                
+                res.status(200).json('Корзина пуста');
             }
         } catch (e) {
             next(e);

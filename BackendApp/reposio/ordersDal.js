@@ -18,7 +18,7 @@ class OrderModel {
     async create(newOrderData, newOrderItemsData) {
         try { 
             const order = await pool('orders').insert(newOrderData);
-            const orderItems = await pool('order_items').insert({order_id: order.id, ...newOrderItemsData});
+            await pool('order_items').insert({order_id: order.id, ...newOrderItemsData});
         } catch (err) {
             console.error('Ошибка создания заказа', err);
             throw err; 

@@ -18,7 +18,7 @@ class ProdModel {
     async create(prodData) {
         try {
             const query = pool('production');
-            const prodItem = await query.insert(prodData);
+            await query.insert(prodData);
         } catch (err) {
             console.error('Ошибка создания продукта', err);
             throw err; 

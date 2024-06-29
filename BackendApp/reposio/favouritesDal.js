@@ -18,7 +18,7 @@ class FavouritesModel {
     async create(favouriteData) {
         try {
             const query = pool('favourites');
-            const favouriteItem = await query.insert(favouriteData);
+            await query.insert(favouriteData);
         } catch (err) {
             console.error('Ошибка добавления в избранное', err);
             throw err; 

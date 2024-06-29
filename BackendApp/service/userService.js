@@ -54,15 +54,15 @@ class UserService {
 
     async login(userData) {
         const user = await this.userModel.findByEmail(userData.email);
-        const role = await this.rolesModel.findById(user.role_id);
 
         if (user && await bcrypt.compare(userData.password, user.password)) {
+            const role = await this.rolesModel.findById(user.role_id);
             const tokens = TokenService.generateTokens({ id: user.id, name: user.name, role: role.name});
             await TokenService.saveToken(user.id, tokens.refreshToken);
 
             return {...tokens};
         } else {
-            throw ApiError.BadRequest('Неверный пароль');
+            throw ApiError.BadRequest('Неверный пароль или email');
         }
     };
 

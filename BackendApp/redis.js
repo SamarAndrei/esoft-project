@@ -1,10 +1,11 @@
 const redis = require('redis');
 const util = require('util');
 
+const redis = require('redis');
+const util = require('util');
+
 const redisClient = redis.createClient({
-    host: 'localhost',
-    port: 6379,
-    connection_name: 'redis-server',
+    url: 'redis://redis-server:redis@localhost:6379'
 });
 
 const getAsync = util.promisify(redisClient.get).bind(redisClient);
