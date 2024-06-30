@@ -1,8 +1,9 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { Grid } from '@mui/material';
 import React from 'react';
+import axios from 'axios';
 
-const withDataFetching = (/**url: URL */) => (WrappedComponent: React.FC) => {
+const withDataFetching = (url: string) => (WrappedComponent: React.FC) => {
     return function WithDataFetching(props: {}) {
         const [data, setData] = React.useState([]);
         const [loading, setLoading] = React.useState(true);
@@ -10,26 +11,29 @@ const withDataFetching = (/**url: URL */) => (WrappedComponent: React.FC) => {
 
         React.useEffect(() => {
             // Simulate fetching data
-            setTimeout(() => {
-                fetchData()
-                    .then(result => {
-                        setData(result);
-                        setLoading(false);
-                    })
-                    .catch(error => {
-                        setError(error);
-                        setLoading(false);
-                    });
-            }, 2000); // Simulate loading for 2 seconds
+            fetchData()
+                .then(result => {
+                    setData(result);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    setError(error);
+                    setLoading(false);
+                });
+            // Simulate loading for 2 seconds
         }, []);
 
         const fetchData = async () => {
-            // Simulating async data fetching + потом через аксиос все переделать
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve(['item1', 'item2']); // Replace with actual data fetching logic
-                }, 1500);
-            });
+            let result = undefined;
+            await axios
+                .get(url)
+                .then(function (response) {
+                    result = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            return result;
         };
 
         return (
@@ -62,7 +66,7 @@ const withDataFetching = (/**url: URL */) => (WrappedComponent: React.FC) => {
                         />
                     </Grid>
                 ) : (
-                    <WrappedComponent data={data} {...props} />
+                    <WrappedComponent data={data} {...(props as any)} />
                 )}
             </div>
         );

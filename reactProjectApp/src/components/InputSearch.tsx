@@ -1,6 +1,6 @@
-import React from 'react';
 import { styled, alpha, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useSearchParams } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -42,16 +42,43 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const InputSearch = () => {
+    const [, setSearchParams] = useSearchParams();
+    // const qQuery = searchParams.getAll('q') || '';
+
+    // React.useEffect(() => {
+    //     if (qQuery) {
+    //         setData(films.films.filter(item => item.name.includes(qQuery)));
+    //     } else {
+    //         setData(films.films);
+    //     }
+    // }, [qQuery]); перемести в грид
+
+    const handleSubmit = (e: { preventDefault: () => void; target: any }) => {
+        e.preventDefault();
+        const form = e.target;
+
+        const query = form.search.value;
+
+        const params = {};
+
+        if (query.length != 0) params.q = query;
+
+        setSearchParams(params);
+    };
+
     return (
-        <Search>
-            <SearchIconWrapper>
-                <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-                placeholder="Поиск"
-                inputProps={{ 'aria-label': 'search' }}
-            />
-        </Search>
+        <form autoComplete="off" onSubmit={handleSubmit}>
+            <Search>
+                <SearchIconWrapper>
+                    <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                    placeholder="Поиск"
+                    inputProps={{ 'aria-label': 'search' }}
+                    name="search"
+                />
+            </Search>
+        </form>
     );
 };
 

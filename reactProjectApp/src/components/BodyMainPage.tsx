@@ -17,6 +17,8 @@ const Body = () => {
     );
 };
 
-const EnhancedProductionGrid = withDataFetching()(ProductionGrid);
+const EnhancedProductionGrid = withDataFetching(
+    'http://localhost:3000/api/production',
+)(ProductionGrid);
 
 export default Body;

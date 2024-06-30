@@ -22,10 +22,14 @@ import { аddToCart } from '../../store/cartActions.js';
 
 type CardType = {
     id: number;
-    name: string;
-    desc: string;
-    rating: number;
+    brand: string;
+    size: string[];
+    type: string;
+    description: string;
     img: string[];
+    price: number;
+    stock_quantity: number;
+    gender: string;
 };
 
 const StyledCardMedia = styled(CardMedia)(() => ({
@@ -72,12 +76,12 @@ const MainCard = ({ card }: { card: CardType }) => {
 
     return (
         <Card>
-            <StyledCardMedia image={`${card.img[0]}`} title={`${card.name}`} />
+            <StyledCardMedia image={`${card.img[0]}`} title={`${card.brand}`} />
             <StyledCardContent>
                 <Typography variant="h5" gutterBottom>
-                    {card.name}
+                    {card.brand}
                 </Typography>
-                <Typography>{card.desc}</Typography>
+                <Typography>{card.description}</Typography>
                 <CardActions>
                     <Link to={`/item/${card.id}`}>
                         <Button size="small" color="primary">

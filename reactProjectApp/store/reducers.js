@@ -22,9 +22,21 @@ const addOrDelToCartReducer = (state = [], action) => {
     }
 };
 
+// const queryReducer = (state = '', action) => {
+//     switch (action.type) {
+//         case 'UPDATE_QUERY':
+//             return action.payload;
+//         case 'CLEAR_QUERY':
+//             return '';
+//         default:
+//             return state;
+//     }
+// };
+
 const rootReducer = combineReducers({
     favorite: addOrDelToFavoriteReducer,
     cart: addOrDelToCartReducer,
+    // query: queryReducer,
 });
 
 export default rootReducer;

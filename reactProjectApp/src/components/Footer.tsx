@@ -6,7 +6,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-// import MapGL from './Map/Maps';
+// import MapGL from './Map/Maps'; когда нибудь разобраться
 import Socials from './Socials';
 
 const GridContent = styled('div')(({ theme }) => ({

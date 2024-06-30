@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
-import OneItem from './pages/OneItem';
+import OneItem from './pages/OneItemPage';
 import NoMatchPage from './pages/NoMatchPage';
 import CartPage from './pages/CartPage';
 import FavouriteListPage from './pages/FavouriteListPage';

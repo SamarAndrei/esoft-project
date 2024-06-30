@@ -8,7 +8,6 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentForm from './CommentForm';
@@ -30,93 +29,30 @@ const srcset = (image: string, size: number, rows = 1, cols = 1) => {
     };
 };
 
-const cards = [
-    {
-        id: 1,
-        brand: 'nike',
-        price: 42000,
-        type: 'Max Brandt',
-        desc: 'лох',
-        rating: 1.5,
-        img: [
-            'https://a.lmcdn.ru/img389x562/R/T/RTLABG703402_22525446_1_v1.jpg',
-        ],
-    },
-    {
-        id: 2,
-        brand: 'nike',
-        price: 204124,
-        type: 'Кеды',
-        desc: 'кеды фирмы хасбик',
-        rating: 3,
-        img: [
-            'https://a.lmcdn.ru/img389x562/R/T/RTLADK756001_23365326_1_v1_2x.jpg',
-        ],
-    },
-    {
-        id: 3,
-        brand: 'nike',
-        price: 203410,
-        type: 'Кеды',
-        desc: 'кеды фирмы хасбик',
-        rating: 1,
-        img: [
-            'https://a.lmcdn.ru/img389x562/R/T/RTLADH862301_22506711_1_v1.jpg',
-        ],
-    },
-    {
-        id: 4,
-        brand: 'nike',
-        price: 201200,
-        type: 'Кеды',
-        desc: 'кеды фирмы хасбик',
-        rating: 4,
-        img: [
-            'https://a.lmcdn.ru/img389x562/R/T/RTLACZ451202_22685691_1_v1.jpg',
-        ],
-    },
-    {
-        id: 5,
-        brand: 'nike',
-        price: 200120,
-        type: 'Кеды',
-        desc: 'кеды фирмы хасбик',
-        rating: 2,
-        img: [
-            'https://a.lmcdn.ru/img389x562/M/P/MP002XW01ENA_23105387_1_v1_2x.jpg',
-        ],
-    },
-    {
-        id: 6,
-        brand: 'nike',
-        price: 20003,
-        type: 'Кеды',
-        desc: 'кеды фирмы хасбик',
-        rating: 2,
-        img: [
-            'https://a.lmcdn.ru/img389x562/R/T/RTLADC097201_21676660_1_v1_2x.jpg',
-            'https://a.lmcdn.ru/img600x866/R/T/RTLADF310501_22229212_4_v1_2x.jpg',
-            'https://a.lmcdn.ru/img600x866/R/T/RTLADF310501_22229212_4_v1_2x.jpg',
-            'https://a.lmcdn.ru/img600x866/R/T/RTLADF310501_22229212_4_v1_2x.jpg',
-        ],
-    },
-];
-
 const GridContent = styled('div')(() => ({
     position: 'relative',
     marginTop: 30,
 }));
 
-const OneItemGrid = () => {
-    const { itemId } = useParams();
-    const card = cards.filter(item => item.id === parseInt(itemId as string));
+type CardType = {
+    id: number;
+    brand: string;
+    size: string[];
+    type: string;
+    description: string;
+    img: string[];
+    price: number;
+    stock_quantity: number;
+    gender: string;
+};
 
+const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
     const favouriteList = useSelector(state => state.favorite);
 
     const dispatch = useDispatch();
 
     const existInFavouriteList = favouriteList.some(
-        (item: { id: number }) => item.id === card[0].id,
+        item => item.id === data.id,
     );
 
     const [favorite, setFavorite] = React.useState(false);
@@ -132,15 +68,15 @@ const OneItemGrid = () => {
     const handleClickFavorite = () => {
         if (favorite) {
             setFavorite(false);
-            dispatch(deleteFromFavorite(card[0]));
+            dispatch(deleteFromFavorite(data));
         } else {
             setFavorite(true);
-            dispatch(аddToFavorite(card[0]));
+            dispatch(аddToFavorite(data));
         }
     };
 
     const handleClickCart = () => {
-        dispatch(аddToCart(card[0]));
+        dispatch(аddToCart(data));
     };
 
     return (
@@ -158,97 +94,87 @@ const OneItemGrid = () => {
                             cols={4}
                             rowHeight={155}
                         >
-                            {card.map(item =>
-                                item.img.map((imgSrc, index) => (
-                                    <ImageListItem
-                                        key={index}
-                                        cols={index === 0 ? 3 : 1}
-                                        rows={index === 0 ? 3 : 1}
-                                    >
-                                        <img
-                                            {...srcset(imgSrc, 121)}
-                                            alt={`${item.brand} ${item.type}`}
-                                            loading="lazy"
-                                        />
-                                    </ImageListItem>
-                                )),
-                            )}
+                            {data.img.map((imgSrc, index) => (
+                                <ImageListItem
+                                    key={index}
+                                    cols={index === 0 ? 3 : 1}
+                                    rows={index === 0 ? 3 : 1}
+                                >
+                                    <img
+                                        {...srcset(imgSrc, 121)}
+                                        alt={`${data.brand} ${data.type}`}
+                                        loading="lazy"
+                                    />
+                                </ImageListItem>
+                            ))}
                         </ImageList>
                     </div>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <GridContent>
-                        {card.map(item => (
-                            <div key={item.id}>
-                                <Typography
-                                    component="h1"
-                                    variant="h3"
+                        <div key={data.id}>
+                            <Typography
+                                component="h1"
+                                variant="h3"
+                                color="inherit"
+                                gutterBottom
+                            >
+                                {`${data.type} ${data.brand}`}
+                            </Typography>
+                            <Typography variant="h5" color="inherit" paragraph>
+                                {`Цена: ${data.price} рублей`}
+                            </Typography>
+                            <Rating
+                                name="read-only"
+                                precision={0.5}
+                                // value={card}                                       тут запрос на все комменты по item_id и sum(весь рейтинг/все отзывы)
+                                readOnly
+                            />
+                            <GridContent>
+                                <IconButton
+                                    size="large"
+                                    aria-label="cart "
+                                    aria-haspopup="true"
                                     color="inherit"
-                                    gutterBottom
+                                    sx={{ mr: 1 }}
+                                    onClick={handleClickFavorite}
                                 >
-                                    {`${item.type} ${item.brand}`}
-                                </Typography>
-                                <Typography
-                                    variant="h5"
+                                    {favorite && existInFavouriteList ? (
+                                        <FavoriteIcon />
+                                    ) : (
+                                        <FavoriteBorderIcon />
+                                    )}
+                                </IconButton>
+                                <IconButton
+                                    size="large"
+                                    aria-label="cart "
+                                    aria-haspopup="true"
                                     color="inherit"
-                                    paragraph
+                                    sx={{ mr: 1 }}
+                                    onClick={handleClickCart}
                                 >
-                                    {`Цена: ${item.price} рублей`}
-                                </Typography>
-                                <Rating
-                                    name="read-only"
-                                    precision={0.5}
-                                    value={item.rating}
-                                    readOnly
-                                />
-                                <GridContent>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="cart "
-                                        aria-haspopup="true"
-                                        color="inherit"
-                                        sx={{ mr: 1 }}
-                                        onClick={handleClickFavorite}
-                                    >
-                                        {favorite && existInFavouriteList ? (
-                                            <FavoriteIcon />
-                                        ) : (
-                                            <FavoriteBorderIcon />
-                                        )}
-                                    </IconButton>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="cart "
-                                        aria-haspopup="true"
-                                        color="inherit"
-                                        sx={{ mr: 1 }}
-                                        onClick={handleClickCart}
-                                    >
-                                        <AddShoppingCartIcon />
-                                    </IconButton>
-                                </GridContent>
-                            </div>
-                        ))}
+                                    <AddShoppingCartIcon />
+                                </IconButton>
+                            </GridContent>
+                        </div>
                     </GridContent>
                 </Grid>
             </Grid>
             <Grid container justifyContent="left" mt={4}>
-                {card.map(item => (
-                    <div key={item.id}>
-                        <Typography
-                            component="h1"
-                            variant="h4"
-                            color="inherit"
-                            gutterBottom
-                        >
-                            Описание
-                        </Typography>
-                        <Typography variant="h5" color="inherit" paragraph>
-                            {`${item.desc}`}
-                        </Typography>
-                        <CommentForm item={card} />
-                    </div>
-                ))}
+                <div key={data.id}>
+                    <Typography
+                        component="h1"
+                        variant="h4"
+                        color="inherit"
+                        gutterBottom
+                    >
+                        Описание
+                    </Typography>
+                    <Typography variant="h5" color="inherit" paragraph>
+                        {`${data.description}`}
+                    </Typography>
+                    <CommentForm item={data} />
+                </div>
             </Grid>
         </Container>
     );
