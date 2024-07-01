@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     AppBar,
     Box,
@@ -9,15 +9,23 @@ import {
     Link,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
 import SideBar from './SideBar';
 import InputSearch from './InputSearch';
 import IconsCartAndFavourites from './IconsCartAndFavourites';
 import LoginButton from './LoginButton';
 import SignUpButton from './SignUpButton';
 import MyProfileButton from './MyProfileButton';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+    const store = useSelector((state: unknown) => state.user);
+
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            store.checkAuth();
+        }
+    }, []);
+
     const [open, setOpen] = React.useState(false);
 
     const toggleDrawer = (newOpen: boolean) => () => {
@@ -44,6 +52,9 @@ const Header = () => {
                                     ХасбикМегаМаркет
                                 </Typography>
                             </Link>
+                            {store.isAuth && (
+                                <Typography>Авторизован!</Typography>
+                            )}
                             <InputSearch />
                             <Box sx={{ flexGrow: 1 }} />
                             <IconsCartAndFavourites />

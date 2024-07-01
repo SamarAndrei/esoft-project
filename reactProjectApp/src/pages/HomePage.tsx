@@ -1,11 +1,11 @@
 import { ErrorBoundary } from 'react-error-boundary';
-import { Fallback } from './Fallback';
-import PaperMainPage from './PaperMainPage';
-import withDataFetching from './Preloader';
-import ProductionGrid from './ProductionGrid';
-import BlockDescription from './BlockDescription';
+import { Fallback } from '../components/Fallback';
+import PaperMainPage from '../components/PaperMainPage';
+import withDataFetching from '../components/Preloader';
+import ProductionGrid from '../components/ProductionGrid';
+import BlockDescription from '../components/BlockDescription';
 
-const Body = () => {
+const HomePage = () => {
     return (
         <body>
             <PaperMainPage />
@@ -21,4 +21,4 @@ const EnhancedProductionGrid = withDataFetching(
     'http://localhost:3000/api/production',
 )(ProductionGrid);
 
-export default Body;
+export default HomePage;

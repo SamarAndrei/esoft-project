@@ -3,7 +3,6 @@ const pool = require('../db');
 // const util = require('util');
 // const red = require('../redis');
 
-
 // type User = {
 //     user_id: number,
 //     name: string,
@@ -14,51 +13,81 @@ const pool = require('../db');
 // };
 
 class CommModel {
-
     async create(commData) {
         try {
             const query = pool('comments');
             await query.insert(commData);
         } catch (err) {
             console.error('Ошибка создания коммента', err);
-            throw err; 
+            throw err;
         } finally {
             // await pool.destroy();
         }
-    }; 
+    }
 
     async getAll(offset, limit) {
-        // const cacheKey = `comments:all:15:${offset}`;
+        const redisKey = `comments:${offset}:${limit}`;
+
         try {
-            // const cachedComms = await red.getAsync(cacheKey);
-            // if (cachedComms) {
-            //     return JSON.parse(cachedComms);
-            // } else {
+            let comms = await redisClient.get(redisKey);
+            if (comms) {
+                return JSON.parse(comms);
+            }
+
             const query = pool('comments');
-            const comms = await query.select('*').from('comments').limit(limit).offset(offset);
-            // await red.setAsync(cacheKey, JSON.stringify(comms), 'EX', 10);
+            comms = await query
+                .select('*')
+                .from('comments')
+                .limit(limit)
+                .offset(offset);
+
+            if (comms) {
+                await redisClient.set(
+                    redisKey,
+                    JSON.stringify(comms),
+                    'EX',
+                    20,
+                );
+            }
+
             return comms;
-            // }
         } catch (err) {
             console.error('Error fetching comment by ID', err);
-            throw err; 
+            throw err;
         } finally {
             // await pool.destroy();
         }
-    };
+    }
 
     async getById(prod_id) {
+        const redisKey = `comments:${prod_id}`;
+
         try {
+            let comms = await redisClient.get(redisKey);
+            if (comms) {
+                return JSON.parse(comms);
+            }
+
             const query = pool('comments');
-            const comms = await query.where('prod_id', prod_id).select();
+            comms = await query.where('prod_id', prod_id).select();
+
+            if (comms) {
+                await redisClient.set(
+                    redisKey,
+                    JSON.stringify(comms),
+                    'EX',
+                    20,
+                );
+            }
+
             return comms;
         } catch (err) {
             console.error('Error fetching comments by ID', err);
-            throw err; 
+            throw err;
         } finally {
             // await pool.destroy();
         }
-    };
-};
+    }
+}
 
 module.exports = new CommModel();

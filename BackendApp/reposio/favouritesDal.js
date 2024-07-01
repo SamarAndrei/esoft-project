@@ -3,7 +3,6 @@ const pool = require('../db');
 // const util = require('util');
 // const red = require('../redis');
 
-
 // type User = {
 //     user_id: number,
 //     name: string,
@@ -14,50 +13,60 @@ const pool = require('../db');
 // };
 
 class FavouritesModel {
-
     async create(favouriteData) {
         try {
             const query = pool('favourites');
             await query.insert(favouriteData);
         } catch (err) {
             console.error('Ошибка добавления в избранное', err);
-            throw err; 
+            throw err;
         } finally {
             // await pool.destroy();
         }
-    }; 
+    }
 
     async getAll(user_id) {
-        // const cacheKey = `users:all:15:${offset}`;
+        const redisKey = `favourites:all:${user_id}`;
+
         try {
-            // const cachedUsers = await red.getAsync(cacheKey);
-            // if (cachedUsers) {
-                // return JSON.parse(cachedUsers);
-            // } else {
-                const query = pool('favourites');
-                const favourites = await query.where({user_id: user_id}).select();
-                // await red.setAsync(cacheKey, JSON.stringify(users), 'EX', 10);
-                return favourites;
-            // }
+            let favourites = await redisClient.get(redisKey);
+            if (favourites) {
+                return JSON.parse(favourites);
+            }
+
+            const query = pool('favourites');
+            favourites = await query.where({ user_id: user_id }).select();
+
+            if (product) {
+                await redisClient.set(
+                    redisKey,
+                    JSON.stringify(favourites),
+                    'EX',
+                    20,
+                );
+            }
+            return favourites;
         } catch (err) {
             console.error('Error fetching favourites', err);
-            throw err; 
+            throw err;
         } finally {
             // await pool.destroy();
         }
-    };
+    }
 
-    async delete(user_id, prod_id ) {
+    async delete(user_id, prod_id) {
         try {
             const query = pool('favourites');
-            const deletedItem = await query.where({ user_id: user_id, prod_id: prod_id}).delete();
+            const deletedItem = await query
+                .where({ user_id: user_id, prod_id: prod_id })
+                .delete();
         } catch (err) {
             console.error('Error fetching favouriteItem by ID', err);
-            throw err; 
+            throw err;
         } finally {
             // await pool.destroy();
         }
-    };
-};
+    }
+}
 
 module.exports = new FavouritesModel();

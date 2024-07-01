@@ -1,24 +1,31 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import App from './App';
-import OneItem from './pages/OneItemPage';
+import OneItemPage from './pages/OneItemPage';
 import NoMatchPage from './pages/NoMatchPage';
 import CartPage from './pages/CartPage';
-import FavouriteListPage from './pages/FavouriteListPage';
+import FavouritesPage from './pages/FavouritesPage';
+import Layout from './components/Layout';
+import HomePage from './pages/HomePage';
 
 const routes = [
-    { path: '/', element: <App /> },
-    { path: '/item/:itemId', element: <OneItem /> },
+    { path: '', element: <HomePage /> },
+    { path: 'item/:itemId', element: <OneItemPage /> },
     { path: '*', element: <NoMatchPage /> },
-    { path: '/cart', element: <CartPage /> },
-    { path: '/favourite', element: <FavouriteListPage /> },
+    { path: 'cart', element: <CartPage /> },
+    { path: 'favourite', element: <FavouritesPage /> },
 ];
 
 export const Router = () => (
     <BrowserRouter>
         <Routes>
-            {routes.map((route, index) => (
-                <Route key={index} path={route.path} element={route.element} />
-            ))}
+            <Route path="/" element={<Layout />}>
+                {routes.map((route, index) => (
+                    <Route
+                        key={index}
+                        path={route.path}
+                        element={route.element}
+                    />
+                ))}
+            </Route>
         </Routes>
     </BrowserRouter>
 );

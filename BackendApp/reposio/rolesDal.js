@@ -10,13 +10,14 @@ const pool = require('../db');
 // };
 
 class RolesModel {
-
     async findById(id) {
         try {
             const query = pool('roles');
-            const role = await query.where({
-                id: id
-              }).first();
+            const role = await query
+                .where({
+                    id: id,
+                })
+                .first();
             if (role) {
                 return role;
             } else {
@@ -29,6 +30,6 @@ class RolesModel {
             // await pool.destroy();
         }
     }
-};
+}
 
 module.exports = new RolesModel();

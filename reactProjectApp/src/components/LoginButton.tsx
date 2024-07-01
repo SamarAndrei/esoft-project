@@ -8,8 +8,10 @@ import {
     DialogContentText,
     TextField,
     DialogActions,
+    Typography,
 } from '@mui/material';
 import validator from 'validator';
+import axios from 'axios';
 
 const LoginButton = () => {
     const [openWinLogin, setOpenWinLogin] = React.useState(false);
@@ -17,14 +19,35 @@ const LoginButton = () => {
     const [loginEmail, setLoginEmail] = React.useState('');
     const [loginPassword, setLoginPassword] = React.useState('');
 
+    const [error, setError] = React.useState(false);
+
     const handleClickWinLogIn = (newOpen: boolean) => {
         setLoginEmail('');
         setLoginPassword('');
+        setError(false);
         setOpenWinLogin(newOpen);
     };
 
     const isLoginFieldsFilled =
-        loginEmail && loginPassword && validator.isEmail(loginEmail);
+        loginEmail &&
+        loginPassword.length >= 8 &&
+        validator.isEmail(loginEmail);
+
+    const handleClickWinLogInComplete = () => {
+        axios
+            .post('http://localhost:3000/api/login', {
+                email: loginEmail,
+                password: loginPassword,
+            })
+            .then(response => {
+                console.log(response);
+                setOpenWinLogin(false);
+            })
+            .catch(error => {
+                console.error(error);
+                setError(true);
+            });
+    };
 
     return (
         <Box mr={1}>
@@ -63,6 +86,15 @@ const LoginButton = () => {
                         fullWidth
                         onChange={e => setLoginPassword(e.target.value)}
                     />
+                    {error && (
+                        <Typography
+                            align="center"
+                            sx={{ marginTop: 1 }}
+                            color="red"
+                        >
+                            Ошибка при входе
+                        </Typography>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -73,7 +105,7 @@ const LoginButton = () => {
                         Отмена
                     </Button>
                     <Button
-                        onClick={() => handleClickWinLogIn(false)}
+                        onClick={() => handleClickWinLogInComplete()}
                         variant="contained"
                         color="secondary"
                         disabled={!isLoginFieldsFilled}

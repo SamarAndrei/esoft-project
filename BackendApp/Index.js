@@ -1,17 +1,25 @@
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const errorMiddleware = require('./middleware/errorMiddleware.ts');
+require('dotenv').config();
+
+const { redisClient } = require('./redis.js');
 
 const app = express();
 
 const port = 3000;
 app.use(express.json());
-app.use(cors());
+app.use(
+    cors({
+        credentials: true,
+        origin: process.env.CLIENT_URL,
+    }),
+);
 app.use(cookieParser());
 
-const RolesModel = require('./reposio/rolesDal'); 
-const UserModel = require('./reposio/userDal'); 
+const RolesModel = require('./reposio/rolesDal');
+const UserModel = require('./reposio/userDal');
 const userRoutes = require('./routes/userRoutes');
 const UserController = require('./controllers/userController');
 const UserService = require('./service/userService');
@@ -57,7 +65,7 @@ const userService = new UserService(UserModel, RolesModel);
 const userController = new UserController(userService);
 
 const commService = new CommService(CommModel);
-const commController = new CommController(commService)
+const commController = new CommController(commService);
 
 app.use('/api', userRoutes(userController));
 app.use('/api', commRoutes(commController));
@@ -68,6 +76,12 @@ app.use('/api', ordersRoutes(ordersController));
 
 app.use(errorMiddleware);
 app.listen(port, 'localhost', () => {
-    console.log(`Server listening at http://localhost:${port}`)
+    console.log(`Server listening at http://localhost:${port}`);
+    try {
+        redisClient
+            .on('error', err => console.log('redisClient error'))
+            .connect();
+    } catch (e) {
+        console.log(e);
+    }
 });
-

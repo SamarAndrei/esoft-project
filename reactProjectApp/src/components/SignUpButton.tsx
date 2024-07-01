@@ -8,8 +8,10 @@ import {
     DialogContentText,
     TextField,
     DialogActions,
+    Typography,
 } from '@mui/material';
 import validator from 'validator';
+import axios from 'axios';
 
 const SignUpButton = () => {
     const [openSignup, setOpenSignup] = React.useState(false);
@@ -18,17 +20,37 @@ const SignUpButton = () => {
     const [signupEmail, setSignupEmail] = React.useState('');
     const [signupPassword, setSignupPassword] = React.useState('');
 
+    const [error, setError] = React.useState(false);
+
     const handleClickSignUp = (newOpen: boolean) => {
         setSignupName('');
         setSignupEmail('');
         setSignupPassword('');
+        setError(false);
         setOpenSignup(newOpen);
     };
     const isSignupFieldsFilled =
         signupName &&
         signupEmail &&
-        signupPassword &&
+        signupPassword.length >= 8 &&
         validator.isEmail(signupEmail);
+
+    const handleClickSignUpComplete = () => {
+        axios
+            .post('http://localhost:3000/api/registration', {
+                name: signupName,
+                email: signupEmail,
+                password: signupPassword,
+            })
+            .then(response => {
+                console.log(response);
+                setOpenSignup(false);
+            })
+            .catch(error => {
+                console.error(error);
+                setError(true);
+            });
+    };
 
     return (
         <Box mr={1}>
@@ -76,6 +98,15 @@ const SignUpButton = () => {
                         fullWidth
                         onChange={e => setSignupPassword(e.target.value)}
                     />
+                    {error && (
+                        <Typography
+                            align="center"
+                            sx={{ marginTop: 1 }}
+                            color="red"
+                        >
+                            Ошибка при регистрации
+                        </Typography>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -86,12 +117,12 @@ const SignUpButton = () => {
                         Отмена
                     </Button>
                     <Button
-                        onClick={() => handleClickSignUp(false)}
+                        onClick={() => handleClickSignUpComplete()}
                         variant="contained"
                         color="secondary"
                         disabled={!isSignupFieldsFilled}
                     >
-                        Изменить данные
+                        Зарегистрироваться
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 import {
     Box,
     Typography,
@@ -9,6 +9,8 @@ import {
     ListItemButton,
     Divider,
 } from '@mui/material';
+
+const types = ['Верхняя одежда', 'Штаны', 'Обувь', 'Аксессуары'];
 
 const SideBar = (props: {
     onClick: MouseEventHandler<HTMLDivElement> | undefined;
@@ -24,28 +26,24 @@ const SideBar = (props: {
             >
                 <List>
                     <Typography sx={{ margin: 1 }}>Мужское</Typography>
-                    {['Верхняя одежда', 'Штаны', 'Обувь', 'Аксессуары'].map(
-                        text => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
-                                    <ListItemText primary={text} />
-                                </ListItemButton>
-                            </ListItem>
-                        ),
-                    )}
+                    {types.map(text => (
+                        <ListItem key={text} disablePadding>
+                            <ListItemButton>
+                                <ListItemText primary={text} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
                 </List>
                 <Divider />
                 <List>
                     <Typography sx={{ margin: 1 }}>Женская одежда</Typography>
-                    {['Верхняя одежда', 'Штаны', 'Обувь', 'Аксессуары'].map(
-                        text => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
-                                    <ListItemText primary={text} />
-                                </ListItemButton>
-                            </ListItem>
-                        ),
-                    )}
+                    {types.map(text => (
+                        <ListItem key={text} disablePadding>
+                            <ListItemButton>
+                                <ListItemText primary={text} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
                 </List>
             </Box>
         </Drawer>

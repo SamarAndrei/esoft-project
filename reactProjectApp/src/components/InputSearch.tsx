@@ -43,15 +43,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const InputSearch = () => {
     const [, setSearchParams] = useSearchParams();
-    // const qQuery = searchParams.getAll('q') || '';
-
-    // React.useEffect(() => {
-    //     if (qQuery) {
-    //         setData(films.films.filter(item => item.name.includes(qQuery)));
-    //     } else {
-    //         setData(films.films);
-    //     }
-    // }, [qQuery]); перемести в грид
 
     const handleSubmit = (e: { preventDefault: () => void; target: any }) => {
         e.preventDefault();

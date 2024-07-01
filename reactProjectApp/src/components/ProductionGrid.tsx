@@ -3,18 +3,7 @@ import MainCard from './MainCard';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import React from 'react';
-
-type CardType = {
-    id: number;
-    brand: string;
-    size: string[];
-    type: string;
-    description: string;
-    img: string[];
-    price: number;
-    stock_quantity: number;
-    gender: string;
-};
+import { CardType } from './TCard.js';
 
 const ProductionGrid: React.FC<{ data: CardType[] }> = ({ data }) => {
     const [searchParams] = useSearchParams();
@@ -34,7 +23,7 @@ const ProductionGrid: React.FC<{ data: CardType[] }> = ({ data }) => {
         } else {
             setData(data);
         }
-    }, [qQuery, data]);
+    }, [qQuery, data, items]);
 
     return (
         <Container id="cards" sx={{ marginTop: 8 }}>

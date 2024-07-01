@@ -15,6 +15,7 @@ import {
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import validator from 'validator';
+import axios from 'axios';
 
 const menuId = 'primary-search-account-menu';
 const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -42,6 +43,7 @@ const MyProfileButton = () => {
     };
 
     const handleMenuCloseLogOut = () => {
+        axios.get('http://localhost:3000/api/logout').then(console.log);
         setAnchorEl(null);
         handleMobileMenuClose();
     };
@@ -78,7 +80,7 @@ const MyProfileButton = () => {
     const isUpdateFieldsFilled =
         updatepName &&
         updateEmail &&
-        updatePassword &&
+        updatePassword.length >= 8 &&
         validator.isEmail(updateEmail);
 
     return (
@@ -237,6 +239,7 @@ const MyProfileButton = () => {
                         </Dialog>
                     </DialogActions>
                 </Dialog>
+                <MenuItem onClick={handleMenuClose}>Мои заказы</MenuItem>
                 <MenuItem onClick={handleMenuCloseLogOut}>Выйти</MenuItem>
             </Menu>
         </div>

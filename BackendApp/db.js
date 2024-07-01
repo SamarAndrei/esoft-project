@@ -9,13 +9,12 @@ const pool = knex({
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         database: process.env.DB_NAME,
-        
     },
-    pool: { 
+    pool: {
         min: parseInt(process.env.DB_MIN),
         max: parseInt(process.env.DB_MAX),
         idleTimeoutMillis: parseInt(process.env.DB_TIMEOUTMILLIS),
-    }
+    },
 });
 
 module.exports = pool;

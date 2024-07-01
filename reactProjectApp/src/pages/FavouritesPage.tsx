@@ -13,7 +13,8 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteFromFavorite } from '../../store/favouriteActions.js';
+import { deleteFromFavorite } from '../store/favouritesSlice.ts';
+import { CardType } from '../components/TCard.js';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -22,12 +23,12 @@ const Img = styled('img')({
     maxHeight: '100%',
 });
 
-const BodyFavouritesPage = () => {
+const FavouritesPage = () => {
     const favouriteList = useSelector(state => state.favorite);
 
     const dispatch = useDispatch();
 
-    const handleClickFavorite = card => {
+    const handleClickFavorite = (card: CardType) => {
         dispatch(deleteFromFavorite(card));
     };
 
@@ -43,7 +44,7 @@ const BodyFavouritesPage = () => {
                     Избранное
                 </Typography>
                 <Divider />
-                {favouriteList.map(card => (
+                {favouriteList.map((card: CardType) => (
                     <Paper
                         key={card.id}
                         sx={{
@@ -89,7 +90,7 @@ const BodyFavouritesPage = () => {
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            {card.desc}
+                                            {card.description}
                                         </Typography>
                                         <Typography
                                             variant="body2"
@@ -99,7 +100,7 @@ const BodyFavouritesPage = () => {
                                                 size="small"
                                                 name="read-only"
                                                 precision={0.5}
-                                                value={card.rating}
+                                                // value={card.rating}
                                                 readOnly
                                             />
                                         </Typography>
@@ -141,4 +142,4 @@ const BodyFavouritesPage = () => {
     );
 };
 
-export default BodyFavouritesPage;
+export default FavouritesPage;

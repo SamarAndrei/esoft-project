@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 const IconsCartAndFavourites = () => {
     const cartList = useSelector(state => state.cart);
-    const favouriteList = useSelector(state => state.favorite);
+    const favouriteList = useSelector(state => state.favourites);
 
     return (
         <div>

@@ -10,15 +10,13 @@ import {
 } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import CommentForm from './CommentForm';
+import CommentForm from './CommentForm.js';
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import {
-    аddToFavorite,
-    deleteFromFavorite,
-} from '../../store/favouriteActions.js';
-import { аddToCart } from '../../store/cartActions.js';
+import { addToFavorite, deleteFromFavorite } from '../store/favouritesSlice.ts';
+import { addToCart } from '../store/cartSlice.ts';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { CardType } from './TCard.js';
 
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
     return {
@@ -34,25 +32,13 @@ const GridContent = styled('div')(() => ({
     marginTop: 30,
 }));
 
-type CardType = {
-    id: number;
-    brand: string;
-    size: string[];
-    type: string;
-    description: string;
-    img: string[];
-    price: number;
-    stock_quantity: number;
-    gender: string;
-};
-
 const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
-    const favouriteList = useSelector(state => state.favorite);
+    const favouriteList = useSelector((state: any) => state.favorites);
 
     const dispatch = useDispatch();
 
     const existInFavouriteList = favouriteList.some(
-        item => item.id === data.id,
+        (item: CardType) => item.id === data.id,
     );
 
     const [favorite, setFavorite] = React.useState(false);
@@ -71,12 +57,12 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
             dispatch(deleteFromFavorite(data));
         } else {
             setFavorite(true);
-            dispatch(аddToFavorite(data));
+            dispatch(addToFavorite(data));
         }
     };
 
     const handleClickCart = () => {
-        dispatch(аddToCart(data));
+        dispatch(addToCart(data));
     };
 
     return (

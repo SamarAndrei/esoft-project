@@ -46,7 +46,7 @@ const CommentForm = ({ item }) => {
                     />
                 </Box>
                 <TextField
-                    label="Ваш комментарий (от 30 символов)."
+                    label="Ваш комментарий (от 25 символов)."
                     variant="outlined"
                     fullWidth
                     multiline

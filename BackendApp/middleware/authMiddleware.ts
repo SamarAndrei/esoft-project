@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const ApiError = require('../exceptions/api_error');
 
 
 const authenticateJWT = (req, res, next) => {

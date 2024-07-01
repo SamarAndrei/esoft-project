@@ -14,23 +14,9 @@ import { Link } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    аddToFavorite,
-    deleteFromFavorite,
-} from '../../store/favouriteActions.js';
-import { аddToCart } from '../../store/cartActions.js';
-
-type CardType = {
-    id: number;
-    brand: string;
-    size: string[];
-    type: string;
-    description: string;
-    img: string[];
-    price: number;
-    stock_quantity: number;
-    gender: string;
-};
+import { addToFavorite, deleteFromFavorite } from '../store/favouritesSlice.ts';
+import { addToCart } from '../store/cartSlice.ts';
+import { CardType } from './TCard.js';
 
 const StyledCardMedia = styled(CardMedia)(() => ({
     paddingTop: '56.25%',
@@ -42,7 +28,7 @@ const StyledCardContent = styled(CardContent)(() => ({
 }));
 
 const MainCard = ({ card }: { card: CardType }) => {
-    const favouriteList = useSelector(state => state.favorite);
+    const favouriteList = useSelector(state => state.favourites);
 
     const dispatch = useDispatch();
 
@@ -66,12 +52,12 @@ const MainCard = ({ card }: { card: CardType }) => {
             dispatch(deleteFromFavorite(card));
         } else {
             setFavorite(true);
-            dispatch(аddToFavorite(card));
+            dispatch(addToFavorite(card));
         }
     };
 
     const handleClickCart = () => {
-        dispatch(аddToCart(card));
+        dispatch(addToCart(card));
     };
 
     return (
