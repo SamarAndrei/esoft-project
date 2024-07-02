@@ -14,7 +14,7 @@ import CommentForm from './CommentForm.js';
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 import { addToFavorite, deleteFromFavorite } from '../store/favouritesSlice.ts';
-import { addToCart } from '../store/cartSlice.ts';
+import { addToCart } from '../store/cartApi.ts';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { CardType } from './TCard.js';
 

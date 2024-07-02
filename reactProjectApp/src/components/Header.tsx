@@ -26,7 +26,7 @@ const Header = () => {
         if (localStorage.getItem('token')) {
             dispatch(checkAuth());
         }
-    }, [store.isAuth]);
+    }, [dispatch, store.isAuth]);
 
     const [open, setOpen] = React.useState(false);
 
@@ -57,9 +57,17 @@ const Header = () => {
                             <InputSearch />
                             <Box sx={{ flexGrow: 1 }} />
                             <IconsCartAndFavourites />
-                            {store.isAuth === false && <LoginButton />}
-                            {store.isAuth === false && <SignUpButton />}
-                            {store.isAuth === true && <MyProfileButton />}
+                            {store.isLoading === false ? (
+                                <>
+                                    {store.isAuth === false && <LoginButton />}
+                                    {store.isAuth === false && <SignUpButton />}
+                                    {store.isAuth === true && (
+                                        <MyProfileButton />
+                                    )}
+                                </>
+                            ) : (
+                                <Typography> wait a second</Typography>
+                            )}
                         </Toolbar>
                     </Container>
                 </AppBar>

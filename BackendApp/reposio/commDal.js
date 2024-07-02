@@ -1,7 +1,6 @@
 const pool = require('../db');
-// const redis = require('redis');
-// const util = require('util');
-// const red = require('../redis');
+const { redisClient } = require('../redis');
+
 
 // type User = {
 //     user_id: number,
@@ -42,12 +41,9 @@ class CommModel {
                 .offset(offset);
 
             if (comms) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(comms),
-                    'EX',
-                    20,
-                );
+                await redisClient.set(redisKey, JSON.stringify(comms), {
+                    EX: 20,
+                });
             }
 
             return comms;
@@ -72,12 +68,9 @@ class CommModel {
             comms = await query.where('prod_id', prod_id).select();
 
             if (comms) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(comms),
-                    'EX',
-                    20,
-                );
+                await redisClient.set(redisKey, JSON.stringify(comms), {
+                    EX: 20,
+                });
             }
 
             return comms;

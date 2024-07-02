@@ -38,20 +38,11 @@ const LoginButton = () => {
         validator.isEmail(loginEmail);
 
     const handleClickWinLogInComplete = () => {
-        // axios
-        //     .post('http://localhost:3000/api/login', {
-        //         email: loginEmail,
-        //         password: loginPassword,
-        //     })
-        //     .then(response => {
-        //         console.log(response);
-        //         setOpenWinLogin(false);
-        //     })
-        //     .catch(error => {
-        //         console.error(error);
-        //         setError(true);
-        //     });
-        dispatch(login({ email: loginEmail, password: loginPassword }));
+        try {
+            dispatch(login({ email: loginEmail, password: loginPassword }));
+        } catch {
+            setError(true);
+        }
     };
 
     return (

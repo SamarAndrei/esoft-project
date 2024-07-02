@@ -12,9 +12,12 @@ import {
     Button,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteFromCart } from '../store/cartSlice.ts';
+import {
+    useGetCartItemsQuery,
+    useDeleteCartItemMutation,
+} from '../store/cartApi.ts';
 import { CardType } from '../components/TCard.js';
+import { useEffect, useState } from 'react';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -24,11 +27,21 @@ const Img = styled('img')({
 });
 
 const CartPage = () => {
-    const cartList = useSelector(state => state.cart);
-    const dispatch = useDispatch();
+    const { data = [], isLoading } = useGetCartItemsQuery();
 
-    const handleClickCart = (card: CardType) => {
-        dispatch(deleteFromCart(card));
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        if (items != data) {
+            setItems(data);
+        }
+    }, [data, items]);
+
+    // const [addToCart, { isError }] = useAddCartItemMutation();
+    const [deleteCartItem] = useDeleteCartItemMutation();
+
+    const handleClickCart = async (id: number) => {
+        await deleteCartItem(id).unwrap();
     };
 
     return (
@@ -43,99 +56,105 @@ const CartPage = () => {
                     Корзина
                 </Typography>
                 <Divider />
-                {cartList.map((card: CardType) => (
-                    <Paper
-                        key={card.id}
-                        sx={{
-                            p: 2,
-                            marginTop: 4,
-                            maxWidth: 500,
-                            flexGrow: 1,
-                            backgroundColor: theme =>
-                                theme.palette.mode === 'dark'
-                                    ? '#1A2027'
-                                    : '#fff',
-                        }}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item>
-                                <ButtonBase
-                                    sx={{ width: 100, height: 120 }}
-                                    href={`/item/${card.id}`}
-                                >
-                                    <Img
-                                        alt={`${card.brand} ${card.type}`}
-                                        src={card.img[0]}
-                                    />
-                                </ButtonBase>
-                            </Grid>
-                            <Grid item xs={12} sm container>
-                                <Grid
-                                    item
-                                    xs
-                                    container
-                                    direction="column"
-                                    spacing={2}
-                                >
-                                    <Grid item xs>
+                {isLoading ? (
+                    <Typography>Запрос идет</Typography>
+                ) : (
+                    items.map((card: CardType) => (
+                        <Paper
+                            key={card.id}
+                            sx={{
+                                p: 2,
+                                marginTop: 4,
+                                maxWidth: 500,
+                                flexGrow: 1,
+                                backgroundColor: theme =>
+                                    theme.palette.mode === 'dark'
+                                        ? '#1A2027'
+                                        : '#fff',
+                            }}
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item>
+                                    <ButtonBase
+                                        sx={{ width: 100, height: 120 }}
+                                        href={`/item/${card.id}`}
+                                    >
+                                        <Img
+                                            alt={`${card.brand} ${card.type}`}
+                                            src={card.img[0]}
+                                        />
+                                    </ButtonBase>
+                                </Grid>
+                                <Grid item xs={12} sm container>
+                                    <Grid
+                                        item
+                                        xs
+                                        container
+                                        direction="column"
+                                        spacing={2}
+                                    >
+                                        <Grid item xs>
+                                            <Typography
+                                                gutterBottom
+                                                variant="subtitle1"
+                                                component="div"
+                                            >
+                                                {`${card.brand} ${card.type}`}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                gutterBottom
+                                            >
+                                                {card.description}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                            >
+                                                <Rating
+                                                    size="small"
+                                                    name="read-only"
+                                                    precision={0.5}
+                                                    // value={card.rating}                                     тут запрос на коммы
+                                                    readOnly
+                                                />
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                href={`/item/${card.id}`}
+                                                size="small"
+                                                color="primary"
+                                            >
+                                                Подробнее
+                                            </Button>
+                                            <IconButton
+                                                size="small"
+                                                aria-label="delete item"
+                                                aria-haspopup="false"
+                                                color="error"
+                                                sx={{ mr: 1, marginLeft: 1 }}
+                                                onClick={() =>
+                                                    handleClickCart(card.id)
+                                                }
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item>
                                         <Typography
-                                            gutterBottom
                                             variant="subtitle1"
                                             component="div"
                                         >
-                                            {`${card.brand} ${card.type}`}
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            gutterBottom
-                                        >
-                                            {card.description}
-                                        </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                        >
-                                            <Rating
-                                                size="small"
-                                                name="read-only"
-                                                precision={0.5}
-                                                // value={card.rating}                                     тут запрос на коммы
-                                                readOnly
-                                            />
+                                            Цена: {card.price} рублей
                                         </Typography>
                                     </Grid>
-                                    <Grid item>
-                                        <Button
-                                            href={`/item/${card.id}`}
-                                            size="small"
-                                            color="primary"
-                                        >
-                                            Подробнее
-                                        </Button>
-                                        <IconButton
-                                            size="small"
-                                            aria-label="delete item"
-                                            aria-haspopup="false"
-                                            color="error"
-                                            sx={{ mr: 1, marginLeft: 1 }}
-                                            onClick={handleClickCart(card)}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Grid>
-                                </Grid>
-                                <Grid item>
-                                    <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                    >
-                                        Цена: {card.price} рублей
-                                    </Typography>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                    </Paper>
-                ))}
+                        </Paper>
+                    ))
+                )}
                 <Divider sx={{ marginTop: 4 }} />
                 <Typography variant="h5" color="inherit" gutterBottom>
                     Итого

@@ -15,8 +15,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavorite, deleteFromFavorite } from '../store/favouritesSlice.ts';
-import { addToCart } from '../store/cartSlice.ts';
 import { CardType } from './TCard.js';
+import { useAddCartItemMutation } from '../store/cartApi.ts';
 
 const StyledCardMedia = styled(CardMedia)(() => ({
     paddingTop: '56.25%',
@@ -28,6 +28,8 @@ const StyledCardContent = styled(CardContent)(() => ({
 }));
 
 const MainCard = ({ card }: { card: CardType }) => {
+    const [addToCart] = useAddCartItemMutation();
+
     const favouriteList = useSelector(state => state.favourites);
 
     const dispatch = useDispatch();
@@ -56,8 +58,8 @@ const MainCard = ({ card }: { card: CardType }) => {
         }
     };
 
-    const handleClickCart = () => {
-        dispatch(addToCart(card));
+    const handleClickCart = async (id: number) => {
+        await addToCart(id).unwrap();
     };
 
     return (
@@ -92,7 +94,7 @@ const MainCard = ({ card }: { card: CardType }) => {
                         aria-label="add item in cart"
                         aria-haspopup="false"
                         color="inherit"
-                        onClick={handleClickCart}
+                        onClick={() => handleClickCart(card.id)}
                     >
                         <AddShoppingCartIcon />
                     </IconButton>

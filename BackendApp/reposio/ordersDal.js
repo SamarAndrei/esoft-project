@@ -1,7 +1,6 @@
 const pool = require('../db');
-// const redis = require('redis');
-// const util = require('util');
-// const red = require('../redis');
+const { redisClient } = require('../redis');
+
 
 // type User = {
 //     user_id: number,
@@ -40,12 +39,9 @@ class OrderModel {
             orders = await query.where({ user_id: user_id }).select();
 
             if (orders) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(orders),
-                    'EX',
-                    20,
-                );
+                await redisClient.set(redisKey, JSON.stringify(orders), {
+                    EX: 20,
+                });
             }
             return orders;
         } catch (err) {
@@ -73,12 +69,9 @@ class OrderModel {
                 .select();
 
             if (orderItems) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(orderItems),
-                    'EX',
-                    20,
-                );
+                await redisClient.set(redisKey, JSON.stringify(orderItems), {
+                    EX: 20,
+                });
             }
 
             return orderItems;

@@ -1,7 +1,5 @@
 const pool = require('../db');
-// const redis = require('redis');
-// const util = require('util');
-// const red = require('../redis');
+const { redisClient } = require('../redis');
 
 // type User = {
 //     user_id: number,
@@ -35,10 +33,15 @@ class CartModel {
             }
 
             const query = pool('cart_items');
-            cart = await query.where({ user_id: user_id }).select();
+            const cart_items = await query.where({ user_id: user_id }).select();
+            const prodIds = cart_items.map(item => item.prod_id);
+
+            cart = await pool('production').whereIn( 'id', prodIds ).select();
 
             if (cart) {
-                await redisClient.set(redisKey, JSON.stringify(cart), 'EX', 20);
+                await redisClient.set(redisKey, JSON.stringify(cart), {
+                    EX: 20,
+                });
             }
 
             return cart;

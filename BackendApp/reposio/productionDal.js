@@ -31,12 +31,9 @@ class ProdModel {
                 .offset(offset);
 
             if (production) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(production),
-                    'EX',
-                    20,
-                );
+                await redisClient.set(redisKey, JSON.stringify(production), {
+                    EX: 20,
+                });
             }
 
             return production;
@@ -48,7 +45,7 @@ class ProdModel {
     }
 
     async getById(prod_id) {
-        const redisKey = `product:${id}`;
+        const redisKey = `product:${prod_id}`;
 
         try {
             let product = await redisClient.get(redisKey);
@@ -64,7 +61,7 @@ class ProdModel {
                     redisKey,
                     JSON.stringify(product),
                     'EX',
-                    20,
+                    20
                 );
             }
 

@@ -16,11 +16,15 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import validator from 'validator';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/userSlice';
 
 const menuId = 'primary-search-account-menu';
 const mobileMenuId = 'primary-search-account-menu-mobile';
 
 const MyProfileButton = () => {
+    const dispatch = useDispatch();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -38,12 +42,6 @@ const MyProfileButton = () => {
 
     const handleMenuClose = () => {
         handleClickWinUpdateProfile(true);
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
-
-    const handleMenuCloseLogOut = () => {
-        axios.get('http://localhost:3000/api/logout').then(console.log);
         setAnchorEl(null);
         handleMobileMenuClose();
     };
@@ -82,6 +80,12 @@ const MyProfileButton = () => {
         updateEmail &&
         updatePassword.length >= 8 &&
         validator.isEmail(updateEmail);
+
+    const handleLogout = () => {
+        dispatch(logout());
+        setAnchorEl(null);
+        handleMobileMenuClose();
+    };
 
     return (
         <div>
@@ -240,7 +244,7 @@ const MyProfileButton = () => {
                     </DialogActions>
                 </Dialog>
                 <MenuItem onClick={handleMenuClose}>Мои заказы</MenuItem>
-                <MenuItem onClick={handleMenuCloseLogOut}>Выйти</MenuItem>
+                <MenuItem onClick={handleLogout}>Выйти</MenuItem>
             </Menu>
         </div>
     );

@@ -51,12 +51,9 @@ class UserModel {
                 .offset(offset);
 
             if (users) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(users),
-                    'EX',
-                    20,
-                );
+                await redisClient.set(redisKey, JSON.stringify(users), {
+                    EX: 20,
+                });
             }
 
             return users;
@@ -80,7 +77,9 @@ class UserModel {
             user = await query.where('id', id).first();
 
             if (user) {
-                await redisClient.set(redisKey, JSON.stringify(user), 'EX', 20);
+                await redisClient.set(redisKey, JSON.stringify(user), {
+                    EX: 20,
+                });
             }
             return user;
         } catch (err) {

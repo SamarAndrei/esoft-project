@@ -2,10 +2,12 @@ import { IconButton, Badge } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useSelector } from 'react-redux';
+import { useGetCartItemsQuery } from '../store/cartApi';
 
 const IconsCartAndFavourites = () => {
-    const cartList = useSelector(state => state.cart);
+    // const cartList = useSelector(state => state.cart);
     const favouriteList = useSelector(state => state.favourites);
+    const { data = [], isLoading } = useGetCartItemsQuery();
 
     return (
         <div>
@@ -35,7 +37,7 @@ const IconsCartAndFavourites = () => {
             >
                 <Badge
                     color="secondary"
-                    badgeContent={cartList.length}
+                    badgeContent={isLoading ? 0 : data.length}
                     showZero
                 >
                     <ShoppingCartIcon />

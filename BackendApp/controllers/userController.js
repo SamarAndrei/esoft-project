@@ -105,7 +105,7 @@ class UserController {
                 httpOnly: true,
             });
 
-            res.status(200).json(`Успешный рефреш`);
+            res.status(200).json(tokens);
         } catch (e) {
             next(e);
         }
