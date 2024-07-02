@@ -33,12 +33,12 @@ const GridContent = styled('div')(() => ({
 }));
 
 const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
-    const favouriteList = useSelector((state: any) => state.favorites);
+    const favouriteList = useSelector(state => state.favourites);
 
     const dispatch = useDispatch();
 
     const existInFavouriteList = favouriteList.some(
-        (item: CardType) => item.id === data.id,
+        (item: { id: number }) => item.id === data.id,
     );
 
     const [favorite, setFavorite] = React.useState(false);
@@ -125,7 +125,7 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
                                     sx={{ mr: 1 }}
                                     onClick={handleClickFavorite}
                                 >
-                                    {favorite && existInFavouriteList ? (
+                                    {favorite ? (
                                         <FavoriteIcon />
                                     ) : (
                                         <FavoriteBorderIcon />

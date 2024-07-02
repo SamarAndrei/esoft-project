@@ -1,5 +1,4 @@
-
-import OneItemGrid from '../components/OneItemGridPage';
+import OneItemGrid from '../components/OneItemGrid';
 import withDataFetching from '../components/Preloader';
 import { useParams } from 'react-router-dom';
 

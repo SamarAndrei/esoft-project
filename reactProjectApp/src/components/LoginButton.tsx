@@ -11,9 +11,13 @@ import {
     Typography,
 } from '@mui/material';
 import validator from 'validator';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/userSlice';
 
 const LoginButton = () => {
+    // const store = useSelector((state: unknown) => state.user);
+    const dispatch = useDispatch();
+
     const [openWinLogin, setOpenWinLogin] = React.useState(false);
 
     const [loginEmail, setLoginEmail] = React.useState('');
@@ -34,19 +38,20 @@ const LoginButton = () => {
         validator.isEmail(loginEmail);
 
     const handleClickWinLogInComplete = () => {
-        axios
-            .post('http://localhost:3000/api/login', {
-                email: loginEmail,
-                password: loginPassword,
-            })
-            .then(response => {
-                console.log(response);
-                setOpenWinLogin(false);
-            })
-            .catch(error => {
-                console.error(error);
-                setError(true);
-            });
+        // axios
+        //     .post('http://localhost:3000/api/login', {
+        //         email: loginEmail,
+        //         password: loginPassword,
+        //     })
+        //     .then(response => {
+        //         console.log(response);
+        //         setOpenWinLogin(false);
+        //     })
+        //     .catch(error => {
+        //         console.error(error);
+        //         setError(true);
+        //     });
+        dispatch(login({ email: loginEmail, password: loginPassword }));
     };
 
     return (

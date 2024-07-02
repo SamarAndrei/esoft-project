@@ -13,9 +13,9 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        login: (state, action) => {
+        login: async (state, action) => {
             try {
-                const response = AuthService.login(
+                const response = await AuthService.login(
                     action.payload.email,
                     action.payload.password,
                 );
@@ -25,12 +25,12 @@ const userSlice = createSlice({
                     isAuth: true,
                 };
             } catch (e) {
-                console.log(e.response?.data?.message);
+                console.error('ошибка входа', e);
             }
         },
-        registration: (state, action) => {
+        registration: async (state, action) => {
             try {
-                const response = AuthService.registration(
+                const response = await AuthService.registration(
                     action.payload.name,
                     action.payload.email,
                     action.payload.password,
@@ -42,7 +42,7 @@ const userSlice = createSlice({
                     isAuth: true,
                 };
             } catch (e) {
-                console.log(e.response?.data?.message);
+                console.error('ошибка при регистрации', e);
             }
         },
 
@@ -55,22 +55,25 @@ const userSlice = createSlice({
                     isAuth: false,
                 };
             } catch (e) {
-                console.log(e.response?.data?.message);
+                console.error(e);
             }
         },
-        checkAuth: state => {
+        checkAuth: async state => {
             try {
-                const response = axios.get<AuthResponse>(`${API_URL}/refresh`, {
-                    withCredentials: true,
-                });
+                const response = await axios.get<AuthResponse>(
+                    `${API_URL}/refresh`,
+                    {
+                        withCredentials: true,
+                    },
+                );
                 console.log(response);
                 localStorage.setItem('token', response.data.accessToken);
                 return {
                     ...state,
-                    isAuth: false,
+                    isAuth: true,
                 };
             } catch (e) {
-                console.log(e.response?.data?.message);
+                console.error('ошибка проверки', e);
             }
         },
     },

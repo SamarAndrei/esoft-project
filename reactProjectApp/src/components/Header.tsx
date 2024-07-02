@@ -15,16 +15,18 @@ import IconsCartAndFavourites from './IconsCartAndFavourites';
 import LoginButton from './LoginButton';
 import SignUpButton from './SignUpButton';
 import MyProfileButton from './MyProfileButton';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { checkAuth } from '../store/userSlice';
 
 const Header = () => {
     const store = useSelector((state: unknown) => state.user);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            store.checkAuth();
+            dispatch(checkAuth());
         }
-    }, []);
+    }, [store.isAuth]);
 
     const [open, setOpen] = React.useState(false);
 
@@ -52,15 +54,12 @@ const Header = () => {
                                     ХасбикМегаМаркет
                                 </Typography>
                             </Link>
-                            {store.isAuth && (
-                                <Typography>Авторизован!</Typography>
-                            )}
                             <InputSearch />
                             <Box sx={{ flexGrow: 1 }} />
                             <IconsCartAndFavourites />
-                            <LoginButton />
-                            <SignUpButton />
-                            <MyProfileButton />
+                            {store.isAuth === false && <LoginButton />}
+                            {store.isAuth === false && <SignUpButton />}
+                            {store.isAuth != false && <MyProfileButton />}
                         </Toolbar>
                     </Container>
                 </AppBar>
