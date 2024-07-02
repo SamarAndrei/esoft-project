@@ -1,84 +1,108 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import AuthService from '../service/authService';
-import { AuthResponse } from '../models/response/AuthResponse';
 import axios from 'axios';
 import { API_URL } from '../http';
+
+export const login = createAsyncThunk(
+    'user/login',
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await AuthService.login(
+                payload.email,
+                payload.password,
+            );
+            localStorage.setItem('token', response.data.accessToken);
+            return { isAuth: true };
+        } catch (error) {
+            console.error('Ошибка входа', error);
+            return rejectWithValue(error.message);
+        }
+    },
+);
+
+export const registration = createAsyncThunk(
+    'user/registration',
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await AuthService.registration(
+                payload.name,
+                payload.email,
+                payload.password,
+            );
+            localStorage.setItem('token', response.data.accessToken);
+            return { isAuth: true };
+        } catch (error) {
+            console.error('Ошибка при регистрации', error);
+            return rejectWithValue(error.message);
+        }
+    },
+);
+
+export const logout = createAsyncThunk(
+    'user/logout',
+    async (_, { rejectWithValue }) => {
+        try {
+            await AuthService.logout();
+            localStorage.removeItem('token');
+            return { isAuth: false };
+        } catch (error) {
+            console.error('Ошибка при выходе', error);
+            return rejectWithValue(error.message);
+        }
+    },
+);
+
+export const checkAuth = createAsyncThunk(
+    'user/checkAuth',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`${API_URL}/refresh`, {
+                withCredentials: true,
+            });
+            localStorage.setItem('token', response.data.accessToken);
+            return { isAuth: true };
+        } catch (error) {
+            console.error('Ошибка проверки авторизации', error);
+            return rejectWithValue(error.message);
+        }
+    },
+);
 
 const initialState = {
     isAuth: false,
     isLoading: false,
 };
 
-const userSlice = createSlice({
-    name: 'user',
-    initialState,
-    reducers: {
-        login: async (state, action) => {
-            try {
-                const response = await AuthService.login(
-                    action.payload.email,
-                    action.payload.password,
-                );
-                localStorage.setItem('token', response.data.accessToken);
-                return {
-                    ...state,
-                    isAuth: true,
-                };
-            } catch (e) {
-                console.error('ошибка входа', e);
-            }
-        },
-        registration: async (state, action) => {
-            try {
-                const response = await AuthService.registration(
-                    action.payload.name,
-                    action.payload.email,
-                    action.payload.password,
-                );
-                console.log(response);
-                localStorage.setItem('token', response.data.accessToken);
-                return {
-                    ...state,
-                    isAuth: true,
-                };
-            } catch (e) {
-                console.error('ошибка при регистрации', e);
-            }
-        },
+const userReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case login.pending.type:
+        case registration.pending.type:
+        case logout.pending.type:
+        case checkAuth.pending.type:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case login.fulfilled.type:
+        case registration.fulfilled.type:
+        case logout.fulfilled.type:
+        case checkAuth.fulfilled.type:
+            return {
+                ...state,
+                isAuth: action.payload.isAuth,
+                isLoading: false,
+            };
+        case login.rejected.type:
+        case registration.rejected.type:
+        case logout.rejected.type:
+        case checkAuth.rejected.type:
+            return {
+                ...state,
+                isLoading: false,
+            };
+        default:
+            return state;
+    }
+};
 
-        logout: state => {
-            try {
-                AuthService.logout();
-                localStorage.removeItem('token');
-                return {
-                    ...state,
-                    isAuth: false,
-                };
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        checkAuth: async state => {
-            try {
-                const response = await axios.get<AuthResponse>(
-                    `${API_URL}/refresh`,
-                    {
-                        withCredentials: true,
-                    },
-                );
-                console.log(response);
-                localStorage.setItem('token', response.data.accessToken);
-                return {
-                    ...state,
-                    isAuth: true,
-                };
-            } catch (e) {
-                console.error('ошибка проверки', e);
-            }
-        },
-    },
-});
-
-export const { login, registration, logout, checkAuth } = userSlice.actions;
-
-export const userReducer = userSlice.reducer;
+export default userReducer;

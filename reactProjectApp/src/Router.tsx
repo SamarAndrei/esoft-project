@@ -5,6 +5,7 @@ import CartPage from './pages/CartPage';
 import FavouritesPage from './pages/FavouritesPage';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
+import OrdersPage from './pages/OrdersPage';
 
 const routes = [
     { path: '', element: <HomePage /> },
@@ -12,6 +13,7 @@ const routes = [
     { path: '*', element: <NoMatchPage /> },
     { path: 'cart', element: <CartPage /> },
     { path: 'favourite', element: <FavouritesPage /> },
+    { path: 'orders', element: <OrdersPage /> },
 ];
 
 export const Router = () => (

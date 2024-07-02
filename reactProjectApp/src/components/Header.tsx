@@ -59,7 +59,7 @@ const Header = () => {
                             <IconsCartAndFavourites />
                             {store.isAuth === false && <LoginButton />}
                             {store.isAuth === false && <SignUpButton />}
-                            {store.isAuth != false && <MyProfileButton />}
+                            {store.isAuth === true && <MyProfileButton />}
                         </Toolbar>
                     </Container>
                 </AppBar>

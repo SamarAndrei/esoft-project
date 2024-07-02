@@ -24,8 +24,7 @@ const Img = styled('img')({
 });
 
 const FavouritesPage = () => {
-    const favouriteList = useSelector(state => state.favorite);
-
+    const favouriteList = useSelector(state => state.favourites);
     const dispatch = useDispatch();
 
     const handleClickFavorite = (card: CardType) => {
