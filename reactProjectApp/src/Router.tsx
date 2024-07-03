@@ -9,7 +9,7 @@ import OrdersPage from './pages/OrdersPage';
 
 const routes = [
     { path: '', element: <HomePage /> },
-    // { path: 'item/:itemId', element: <OneItemPage /> },
+    { path: 'item/:itemId', element: <OneItemPage /> },
     { path: '*', element: <NoMatchPage /> },
     { path: 'cart', element: <CartPage /> },
     { path: 'favourite', element: <FavouritesPage /> },

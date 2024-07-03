@@ -6,7 +6,7 @@ class CartService {
     async addCartItem(cartItemData, user_id, prod_id) {
         const newCartItemData = {
             user_id: user_id,
-            prod_id,
+            prod_id: prod_id,
             quantity: cartItemData.quantity,
         };
         return this.cartModel.create(newCartItemData);

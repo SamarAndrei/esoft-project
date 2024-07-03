@@ -56,11 +56,13 @@ const Header = () => {
                             </Link>
                             <InputSearch />
                             <Box sx={{ flexGrow: 1 }} />
-                            <IconsCartAndFavourites />
                             {store.isLoading === false ? (
                                 <>
                                     {store.isAuth === false && <LoginButton />}
                                     {store.isAuth === false && <SignUpButton />}
+                                    {store.isAuth === true && (
+                                        <IconsCartAndFavourites />
+                                    )}
                                     {store.isAuth === true && (
                                         <MyProfileButton />
                                     )}

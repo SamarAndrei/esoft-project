@@ -29,7 +29,6 @@ class FavouritesController {
             const prod_id = parseInt(req.params.prod_id, 10);
 
             const newItem = await this.favouritesService.addFavouriteItem(
-                req.body,
                 user_id,
                 prod_id,
             );

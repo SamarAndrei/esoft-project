@@ -1,7 +1,6 @@
 const pool = require('../db');
 const { redisClient } = require('../redis');
 
-
 // type User = {
 //     user_id: number,
 //     name: string,
@@ -69,7 +68,7 @@ class CommModel {
 
             if (comms) {
                 await redisClient.set(redisKey, JSON.stringify(comms), {
-                    EX: 20,
+                    EX: 10,
                 });
             }
 

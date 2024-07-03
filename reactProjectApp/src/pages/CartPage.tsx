@@ -17,7 +17,7 @@ import {
     useDeleteCartItemMutation,
 } from '../store/cartApi.ts';
 import { CardType } from '../components/TCard.js';
-import { useEffect, useState } from 'react';
+import Spinner from '../components/Spinner.tsx';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -26,22 +26,32 @@ const Img = styled('img')({
     maxHeight: '100%',
 });
 
+// const averageRating = (card, data) => {
+//     let sum = 0;
+//     let count = 0;
+
+//     for (let item of data[2]) {
+//         if (item.prod_id === card.id) {
+//             sum += item.rating;
+//             count++;
+//         }
+//     }
+
+//     if (count === 0) {
+//         return 0;
+//     }
+
+//     return sum / count;
+// };
+
 const CartPage = () => {
-    const { data = [], isLoading } = useGetCartItemsQuery();
+    const { data = [], isLoading, refetch } = useGetCartItemsQuery();
 
-    const [items, setItems] = useState([]);
-
-    useEffect(() => {
-        if (items != data) {
-            setItems(data);
-        }
-    }, [data, items]);
-
-    // const [addToCart, { isError }] = useAddCartItemMutation();
     const [deleteCartItem] = useDeleteCartItemMutation();
 
     const handleClickCart = async (id: number) => {
         await deleteCartItem(id).unwrap();
+        await refetch();
     };
 
     return (
@@ -57,9 +67,9 @@ const CartPage = () => {
                 </Typography>
                 <Divider />
                 {isLoading ? (
-                    <Typography>Запрос идет</Typography>
-                ) : (
-                    items.map((card: CardType) => (
+                    <Spinner />
+                ) : data != [] ? (
+                    data[1].map((card: CardType) => (
                         <Paper
                             key={card.id}
                             sx={{
@@ -115,7 +125,7 @@ const CartPage = () => {
                                                     size="small"
                                                     name="read-only"
                                                     precision={0.5}
-                                                    // value={card.rating}                                     тут запрос на коммы
+                                                    // value={}                              отзывы
                                                     readOnly
                                                 />
                                             </Typography>
@@ -154,6 +164,8 @@ const CartPage = () => {
                             </Grid>
                         </Paper>
                     ))
+                ) : (
+                    <Typography>Корзина пуста</Typography>
                 )}
                 <Divider sx={{ marginTop: 4 }} />
                 <Typography variant="h5" color="inherit" gutterBottom>

@@ -11,12 +11,15 @@ import {
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentForm from './CommentForm.js';
-import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { addToFavorite, deleteFromFavorite } from '../store/favouritesSlice.ts';
-import { addToCart } from '../store/cartApi.ts';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { CardType } from './TCard.js';
+import { useAddCartItemMutation } from '../store/cartApi.js';
+import {
+    useAddFavouriteMutation,
+    useDeleteFavouriteMutation,
+    useGetFavouritesQuery,
+} from '../store/favouritesApi.js';
 
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
     return {
@@ -33,11 +36,13 @@ const GridContent = styled('div')(() => ({
 }));
 
 const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
-    const favouriteList = useSelector(state => state.favourites);
+    const [addCartItem] = useAddCartItemMutation();
 
-    const dispatch = useDispatch();
+    const { data: favourites = [] } = useGetFavouritesQuery();
+    const [addFavorite] = useAddFavouriteMutation();
+    const [deleteFavourite] = useDeleteFavouriteMutation();
 
-    const existInFavouriteList = favouriteList.some(
+    const existInFavouriteList = favourites.some(
         (item: { id: number }) => item.id === data.id,
     );
 
@@ -51,18 +56,18 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
         }
     }, [existInFavouriteList]);
 
-    const handleClickFavorite = () => {
+    const handleClickFavorite = async (id: number) => {
         if (favorite) {
             setFavorite(false);
-            dispatch(deleteFromFavorite(data));
+            await addFavorite(id).unwrap();
         } else {
             setFavorite(true);
-            dispatch(addToFavorite(data));
+            await deleteFavourite(id).unwrap();
         }
     };
 
-    const handleClickCart = () => {
-        dispatch(addToCart(data));
+    const handleClickCart = async (id: number) => {
+        await addCartItem(id);
     };
 
     return (
@@ -123,7 +128,7 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
                                     aria-haspopup="true"
                                     color="inherit"
                                     sx={{ mr: 1 }}
-                                    onClick={handleClickFavorite}
+                                    onClick={() => handleClickFavorite(data.id)}
                                 >
                                     {favorite ? (
                                         <FavoriteIcon />
@@ -137,7 +142,7 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
                                     aria-haspopup="true"
                                     color="inherit"
                                     sx={{ mr: 1 }}
-                                    onClick={handleClickCart}
+                                    onClick={() => handleClickCart(data.id)}
                                 >
                                     <AddShoppingCartIcon />
                                 </IconButton>

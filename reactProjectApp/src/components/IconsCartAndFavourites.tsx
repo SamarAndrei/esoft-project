@@ -1,14 +1,28 @@
 import { IconButton, Badge } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useSelector } from 'react-redux';
 import { useGetCartItemsQuery } from '../store/cartApi';
+import { useGetFavouritesQuery } from '../store/favouritesApi';
+import { useEffect, useState } from 'react';
 
 const IconsCartAndFavourites = () => {
-    // const cartList = useSelector(state => state.cart);
-    const favouriteList = useSelector(state => state.favourites);
-    const { data = [], isLoading } = useGetCartItemsQuery();
+    const { data: favourites = [], isLoading: isLoadingFavourites } =
+        useGetFavouritesQuery();
 
+    const { data: cartItems = [], isLoading: isLoadingCart } =
+        useGetCartItemsQuery();
+
+    const [favouritesData, setFavouritesData] = useState([]);
+
+    useEffect(() => {
+        if (!isLoadingFavourites) {
+            setFavouritesData(favourites);
+        }
+    }, [favourites, isLoadingFavourites]);
+
+    if (cartItems != 1) {
+        console.log(cartItems);
+    }
     return (
         <div>
             <IconButton
@@ -21,7 +35,9 @@ const IconsCartAndFavourites = () => {
             >
                 <Badge
                     color="secondary"
-                    badgeContent={favouriteList.length}
+                    badgeContent={
+                        isLoadingFavourites ? 0 : favouritesData.length
+                    }
                     showZero
                 >
                     <FavoriteIcon />
@@ -37,7 +53,9 @@ const IconsCartAndFavourites = () => {
             >
                 <Badge
                     color="secondary"
-                    badgeContent={isLoading ? 0 : data.length}
+                    badgeContent={
+                        isLoadingCart && cartItems ? 0 : cartItems[0].length
+                    }
                     showZero
                 >
                     <ShoppingCartIcon />

@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_URL } from '../http';
 
-export const cartApi = createApi({
-    reducerPath: 'cartApi',
-    tagTypes: ['cart_items'],
+export const favouritesApi = createApi({
+    reducerPath: 'favouritesApi',
+    tagTypes: ['favourites'],
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
         prepareHeaders: headers => {
@@ -17,40 +17,40 @@ export const cartApi = createApi({
         credentials: 'include',
     }),
     endpoints: build => ({
-        getCartItems: build.query({
-            query: () => `cart`,
+        getFavourites: build.query({
+            query: () => `favourites`,
             providesTags: result =>
                 result
                     ? [
                           ...result.map(({ id }) => ({
-                              type: 'cart_items',
+                              type: 'favourites',
                               id,
                           })),
-                          { type: 'cart_items', id: 'LIST' },
+                          { type: 'favourites', id: 'LIST' },
                       ]
-                    : [{ type: 'cart_items', id: 'LIST' }],
+                    : [{ type: 'favourites', id: 'LIST' }],
         }),
 
-        addCartItem: build.mutation({
+        addFavourite: build.mutation({
             query: id => ({
-                url: `production/${id}/cart`,
+                url: `production/${id}/favourites`,
                 method: 'POST',
             }),
-            invalidatesTags: [{ type: 'cart_items', id: 'LIST' }],
+            invalidatesTags: [{ type: 'favourites', id: 'LIST' }],
         }),
 
-        deleteCartItem: build.mutation({
+        deleteFavourite: build.mutation({
             query: id => ({
-                url: `production/${id}/cart`,
+                url: `production/${id}/favourites`,
                 method: 'DELETE',
             }),
-            invalidatesTags: [{ type: 'cart_items', id: 'LIST' }],
+            invalidatesTags: [{ type: 'favourites', id: 'LIST' }],
         }),
     }),
 });
 
 export const {
-    useGetCartItemsQuery,
-    useAddCartItemMutation,
-    useDeleteCartItemMutation,
-} = cartApi;
+    useGetFavouritesQuery,
+    useAddFavouriteMutation,
+    useDeleteFavouriteMutation,
+} = favouritesApi;

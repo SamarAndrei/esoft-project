@@ -13,10 +13,13 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Link } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { useDispatch, useSelector } from 'react-redux';
-import { addToFavorite, deleteFromFavorite } from '../store/favouritesSlice.ts';
+import {
+    useAddFavouriteMutation,
+    useDeleteFavouriteMutation,
+    useGetFavouritesQuery,
+} from '../store/favouritesApi.ts';
 import { CardType } from './TCard.js';
-import { useAddCartItemMutation } from '../store/cartApi.ts';
+import { useAddCartItemMutation, useGetCartItemsQuery } from '../store/cartApi.ts';
 
 const StyledCardMedia = styled(CardMedia)(() => ({
     paddingTop: '56.25%',
@@ -28,13 +31,13 @@ const StyledCardContent = styled(CardContent)(() => ({
 }));
 
 const MainCard = ({ card }: { card: CardType }) => {
-    const [addToCart] = useAddCartItemMutation();
+    const [addCartItem] = useAddCartItemMutation();
 
-    const favouriteList = useSelector(state => state.favourites);
+    const { data = [], refetch: refetchFavourites } = useGetFavouritesQuery();
+    const [addFavorite] = useAddFavouriteMutation();
+    const [deleteFavourite] = useDeleteFavouriteMutation();
 
-    const dispatch = useDispatch();
-
-    const existInFavouriteList = favouriteList.some(
+    const existInFavouriteList = data.some(
         (item: { id: number }) => item.id === card.id,
     );
 
@@ -48,18 +51,21 @@ const MainCard = ({ card }: { card: CardType }) => {
         }
     }, [existInFavouriteList]);
 
-    const handleClickFavorite = () => {
+    const handleClickFavorite = async (id: number) => {
         if (favorite) {
             setFavorite(false);
-            dispatch(deleteFromFavorite(card));
+            await deleteFavourite(id).unwrap();
+            await refetchFavourites();
         } else {
             setFavorite(true);
-            dispatch(addToFavorite(card));
+            await addFavorite(id).unwrap();
+            await refetchFavourites();
+
         }
     };
 
     const handleClickCart = async (id: number) => {
-        await addToCart(id).unwrap();
+        await addCartItem(id).unwrap();
     };
 
     return (
@@ -81,7 +87,7 @@ const MainCard = ({ card }: { card: CardType }) => {
                         aria-label="add item in cart"
                         aria-haspopup="false"
                         color="inherit"
-                        onClick={handleClickFavorite}
+                        onClick={() => handleClickFavorite(card.id)}
                     >
                         {favorite && existInFavouriteList ? (
                             <FavoriteIcon />
