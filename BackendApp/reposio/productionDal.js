@@ -57,12 +57,9 @@ class ProdModel {
             product = await query.where('id', prod_id).first();
 
             if (product) {
-                await redisClient.set(
-                    redisKey,
-                    JSON.stringify(product),
-                    'EX',
-                    20
-                );
+                await redisClient.set(redisKey, JSON.stringify(product), {
+                    EX: 20,
+                });
             }
 
             return product;

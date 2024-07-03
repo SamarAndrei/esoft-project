@@ -57,7 +57,7 @@ class FavouritesModel {
     async delete(user_id, prod_id) {
         try {
             const query = pool('favourites');
-            const deletedItem = await query
+            await query
                 .where({ user_id: user_id, prod_id: prod_id })
                 .delete();
         } catch (err) {

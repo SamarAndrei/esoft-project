@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 // import MapGL from './Map/Maps'; когда нибудь разобраться
 import Socials from './Socials';
+import React from 'react';
 
 const GridContent = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -24,7 +25,7 @@ const linksHelp = [
     { path: '#', name: 'Ссылка' },
 ];
 
-const Footer = () => {
+const Footer = React.memo(() => {
     return (
         <footer>
             <Divider sx={{ marginTop: 4 }} />
@@ -66,6 +67,6 @@ const Footer = () => {
             {/* <MapGL/> */}
         </footer>
     );
-};
+});
 
 export default Footer;

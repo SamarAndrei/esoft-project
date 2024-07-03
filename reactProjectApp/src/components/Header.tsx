@@ -18,7 +18,7 @@ import MyProfileButton from './MyProfileButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkAuth } from '../store/userSlice';
 
-const Header = () => {
+const Header = React.memo(() => {
     const store = useSelector((state: unknown) => state.user);
     const dispatch = useDispatch();
 
@@ -81,6 +81,6 @@ const Header = () => {
             </Box>
         </header>
     );
-};
+});
 
 export default Header;

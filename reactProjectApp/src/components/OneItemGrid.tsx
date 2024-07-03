@@ -38,7 +38,8 @@ const GridContent = styled('div')(() => ({
 const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
     const [addCartItem] = useAddCartItemMutation();
 
-    const { data: favourites = [] } = useGetFavouritesQuery();
+    const { data: favourites = [], refetch: refetchFavourites } =
+        useGetFavouritesQuery();
     const [addFavorite] = useAddFavouriteMutation();
     const [deleteFavourite] = useDeleteFavouriteMutation();
 
@@ -46,24 +47,13 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
         (item: { id: number }) => item.id === data.id,
     );
 
-    const [favorite, setFavorite] = React.useState(false);
-
-    React.useEffect(() => {
-        if (existInFavouriteList) {
-            setFavorite(true);
-        } else {
-            setFavorite(false);
-        }
-    }, [existInFavouriteList]);
-
-    const handleClickFavorite = async (id: number) => {
-        if (favorite) {
-            setFavorite(false);
-            await addFavorite(id).unwrap();
-        } else {
-            setFavorite(true);
-            await deleteFavourite(id).unwrap();
-        }
+    const handleClickDeleteFromFavorite = async (id: number) => {
+        await deleteFavourite(id).unwrap();
+        await refetchFavourites();
+    };
+    const handleClickAddToFavorite = async (id: number) => {
+        await addFavorite(id).unwrap();
+        await refetchFavourites();
     };
 
     const handleClickCart = async (id: number) => {
@@ -122,20 +112,35 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
                                 readOnly
                             />
                             <GridContent>
-                                <IconButton
-                                    size="large"
-                                    aria-label="cart "
-                                    aria-haspopup="true"
-                                    color="inherit"
-                                    sx={{ mr: 1 }}
-                                    onClick={() => handleClickFavorite(data.id)}
-                                >
-                                    {favorite ? (
+                                {existInFavouriteList ? (
+                                    <IconButton
+                                        size="large"
+                                        aria-label="cart "
+                                        aria-haspopup="true"
+                                        color="inherit"
+                                        sx={{ mr: 1 }}
+                                        onClick={() =>
+                                            handleClickDeleteFromFavorite(
+                                                data.id,
+                                            )
+                                        }
+                                    >
                                         <FavoriteIcon />
-                                    ) : (
+                                    </IconButton>
+                                ) : (
+                                    <IconButton
+                                        size="large"
+                                        aria-label="cart "
+                                        aria-haspopup="true"
+                                        color="inherit"
+                                        sx={{ mr: 1 }}
+                                        onClick={() =>
+                                            handleClickAddToFavorite(data.id)
+                                        }
+                                    >
                                         <FavoriteBorderIcon />
-                                    )}
-                                </IconButton>
+                                    </IconButton>
+                                )}
                                 <IconButton
                                     size="large"
                                     aria-label="cart "

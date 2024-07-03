@@ -19,7 +19,7 @@ import {
     useGetFavouritesQuery,
 } from '../store/favouritesApi.ts';
 import { CardType } from './TCard.js';
-import { useAddCartItemMutation, useGetCartItemsQuery } from '../store/cartApi.ts';
+import { useAddCartItemMutation } from '../store/cartApi.ts';
 
 const StyledCardMedia = styled(CardMedia)(() => ({
     paddingTop: '56.25%',
@@ -41,27 +41,14 @@ const MainCard = ({ card }: { card: CardType }) => {
         (item: { id: number }) => item.id === card.id,
     );
 
-    const [favorite, setFavorite] = React.useState(false);
+    const handleClickDeleteFromFavourite = async (id: number) => {
+        await deleteFavourite(id).unwrap();
+        await refetchFavourites();
+    };
 
-    React.useEffect(() => {
-        if (existInFavouriteList) {
-            setFavorite(true);
-        } else {
-            setFavorite(false);
-        }
-    }, [existInFavouriteList]);
-
-    const handleClickFavorite = async (id: number) => {
-        if (favorite) {
-            setFavorite(false);
-            await deleteFavourite(id).unwrap();
-            await refetchFavourites();
-        } else {
-            setFavorite(true);
-            await addFavorite(id).unwrap();
-            await refetchFavourites();
-
-        }
+    const handleClickAddToFavourite = async (id: number) => {
+        await addFavorite(id).unwrap();
+        await refetchFavourites();
     };
 
     const handleClickCart = async (id: number) => {
@@ -75,6 +62,7 @@ const MainCard = ({ card }: { card: CardType }) => {
                 <Typography variant="h5" gutterBottom>
                     {card.brand}
                 </Typography>
+                <Typography color="primary">{card.price} руб.</Typography>
                 <Typography>{card.description}</Typography>
                 <CardActions>
                     <Link to={`/item/${card.id}`}>
@@ -82,19 +70,29 @@ const MainCard = ({ card }: { card: CardType }) => {
                             Подробнее
                         </Button>
                     </Link>
-                    <IconButton
-                        size="large"
-                        aria-label="add item in cart"
-                        aria-haspopup="false"
-                        color="inherit"
-                        onClick={() => handleClickFavorite(card.id)}
-                    >
-                        {favorite && existInFavouriteList ? (
+                    {existInFavouriteList ? (
+                        <IconButton
+                            size="large"
+                            aria-label="add item in cart"
+                            aria-haspopup="false"
+                            color="inherit"
+                            onClick={() =>
+                                handleClickDeleteFromFavourite(card.id)
+                            }
+                        >
                             <FavoriteIcon />
-                        ) : (
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            size="large"
+                            aria-label="add item in cart"
+                            aria-haspopup="false"
+                            color="inherit"
+                            onClick={() => handleClickAddToFavourite(card.id)}
+                        >
                             <FavoriteBorderIcon />
-                        )}
-                    </IconButton>
+                        </IconButton>
+                    )}
                     <IconButton
                         size="large"
                         aria-label="add item in cart"

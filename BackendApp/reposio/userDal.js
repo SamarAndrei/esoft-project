@@ -26,7 +26,7 @@ class UserModel {
     async createRole(userData) {
         try {
             const query = pool('users');
-            const user = await query.insert(userData);
+            await query.insert(userData);
         } catch (err) {
             console.error('Ошибка создания юзера', err);
             throw err;

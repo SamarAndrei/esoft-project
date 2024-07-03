@@ -14,7 +14,7 @@ const ProductionGrid: React.FC<{ data: CardType[] }> = ({ data }) => {
         if (qQuery !== '') {
             const lowerCaseQuery = qQuery.toLowerCase();
             setData(
-                items.filter(
+                data.filter(
                     item =>
                         item.brand.toLowerCase().includes(lowerCaseQuery) ||
                         item.description.toLowerCase().includes(lowerCaseQuery),

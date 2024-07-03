@@ -3,7 +3,6 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useGetCartItemsQuery } from '../store/cartApi';
 import { useGetFavouritesQuery } from '../store/favouritesApi';
-import { useEffect, useState } from 'react';
 
 const IconsCartAndFavourites = () => {
     const { data: favourites = [], isLoading: isLoadingFavourites } =
@@ -12,17 +11,6 @@ const IconsCartAndFavourites = () => {
     const { data: cartItems = [], isLoading: isLoadingCart } =
         useGetCartItemsQuery();
 
-    const [favouritesData, setFavouritesData] = useState([]);
-
-    useEffect(() => {
-        if (!isLoadingFavourites) {
-            setFavouritesData(favourites);
-        }
-    }, [favourites, isLoadingFavourites]);
-
-    if (cartItems != 1) {
-        console.log(cartItems);
-    }
     return (
         <div>
             <IconButton
@@ -35,9 +23,7 @@ const IconsCartAndFavourites = () => {
             >
                 <Badge
                     color="secondary"
-                    badgeContent={
-                        isLoadingFavourites ? 0 : favouritesData.length
-                    }
+                    badgeContent={isLoadingFavourites ? 0 : favourites.length}
                     showZero
                 >
                     <FavoriteIcon />
