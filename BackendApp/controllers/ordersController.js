@@ -18,13 +18,9 @@ class OrderController {
 
     getOrderById = async (req, res, next) => {
         try {
-            const order_id = parseInt(req.user.id, 10);
-            const user_id = parseInt(req.params.user_id, 10);
+            const order_id = parseInt(req.params.order_id, 10);
 
-            const order = await this.orderService.getOrderById(
-                user_id,
-                order_id,
-            );
+            const order = await this.orderService.getOrderById(order_id);
 
             if (order) {
                 res.status(200).json(order);

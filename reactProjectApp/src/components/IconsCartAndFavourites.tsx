@@ -40,7 +40,7 @@ const IconsCartAndFavourites = () => {
                 <Badge
                     color="secondary"
                     badgeContent={
-                        isLoadingCart && cartItems ? 0 : cartItems[0].length
+                        isLoadingCart && cartItems ? 0 : cartItems.length
                     }
                     showZero
                 >

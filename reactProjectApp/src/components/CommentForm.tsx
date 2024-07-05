@@ -1,30 +1,22 @@
 import { Box, Button, Rating, TextField, Typography } from '@mui/material';
 import React from 'react';
+import CommentsService from '../service/comments';
+import { CardType } from './TCard';
 
-const CommentForm = ({ item }) => {
+const CommentForm = ({ item }: { item: CardType }) => {
     const [rating, setRating] = React.useState(0);
     const [comment, setComment] = React.useState('');
-
-    const handleRatingChange = (
-        e: React.SyntheticEvent<Element, Event>,
-        newValue: number,
-    ) => {
-        setRating(newValue);
-    };
-
-    const handleCommentChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-        setComment(e.target.value);
-    };
 
     const handleSubmit = (e: { preventDefault: () => void; target: any }) => {
         e.preventDefault();
         const form = e.target;
-
-        console.log('Rating:', parseFloat(rating));
-        console.log('Comment:', comment);
-        console.log('Id:', item[0].id);
+        CommentsService.sendComment(
+            item.id,
+            form.comment.value,
+            parseFloat(form.rating.value),
+        );
+        setRating(0);
+        setComment('');
     };
 
     const isFormEmpty = () => {
@@ -40,19 +32,20 @@ const CommentForm = ({ item }) => {
                     <Rating
                         name="rating"
                         value={rating}
-                        onChange={e => handleRatingChange(e, e.target.value)}
+                        onChange={e => setRating(parseFloat(e.target.value))}
                         precision={0.5}
                         size="large"
                     />
                 </Box>
                 <TextField
+                    name="comment"
                     label="Ваш комментарий (от 25 символов)."
                     variant="outlined"
                     fullWidth
                     multiline
                     rows={4}
                     value={comment}
-                    onChange={e => handleCommentChange(e)}
+                    onChange={e => setComment(e.target.value)}
                 />
                 <Box mt={2}>
                     <Button

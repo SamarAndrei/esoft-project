@@ -18,23 +18,23 @@ class ProdModel {
         const redisKey = `production:${offset}:${limit}`;
 
         try {
-            let production = await redisClient.get(redisKey);
-            if (production) {
-                return JSON.parse(production);
-            }
+            // let production = await redisClient.get(redisKey);
+            // if (production) {
+            //     return JSON.parse(production);
+            // }
 
             const query = pool('production');
-            production = await query
+            const production = await query
                 .select('*')
                 .from('production')
                 .limit(limit)
                 .offset(offset);
 
-            if (production) {
-                await redisClient.set(redisKey, JSON.stringify(production), {
-                    EX: 20,
-                });
-            }
+            // if (production) {
+            //     await redisClient.set(redisKey, JSON.stringify(production), {
+            //         EX: 20,
+            //     });
+            // }
 
             return production;
         } catch (err) {
@@ -53,8 +53,23 @@ class ProdModel {
                 return JSON.parse(product);
             }
 
-            const query = pool('production');
-            product = await query.where('id', prod_id).first();
+            product = await pool('production')
+                .where('id', prod_id)
+                .first();
+            const comments = await pool('comments')
+                .where('prod_id', prod_id)
+                .select();
+
+            if (comments.length > 0) {
+                const sum = comments.reduce(
+                    (total, comment) => total + comment.rating,
+                    0,
+                );
+                const averageRating = sum / comments.length;
+                product.averageRating = averageRating;
+            } else {
+                product.averageRating = 0;
+            }
 
             if (product) {
                 await redisClient.set(redisKey, JSON.stringify(product), {

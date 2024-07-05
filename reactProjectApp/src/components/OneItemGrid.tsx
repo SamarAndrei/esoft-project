@@ -20,6 +20,8 @@ import {
     useDeleteFavouriteMutation,
     useGetFavouritesQuery,
 } from '../store/favouritesApi.js';
+import CommentsGrid from './CommentsGrid.js';
+import withDataFetching from './Preloader.js';
 
 const srcset = (image: string, size: number, rows = 1, cols = 1) => {
     return {
@@ -59,6 +61,10 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
     const handleClickCart = async (id: number) => {
         await addCartItem(id);
     };
+
+    const EnhancedCommentsGrid = withDataFetching(
+        `http://localhost:3000/api/production/${data.id}/comments`,
+    )(CommentsGrid);
 
     return (
         <Container fixed sx={{ marginTop: 8 }}>
@@ -108,7 +114,7 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
                             <Rating
                                 name="read-only"
                                 precision={0.5}
-                                // value={card}                                       тут запрос на все комменты по item_id и sum(весь рейтинг/все отзывы)
+                                value={data.averageRating}
                                 readOnly
                             />
                             <GridContent>
@@ -170,6 +176,7 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
                         {`${data.description}`}
                     </Typography>
                     <CommentForm item={data} />
+                    <EnhancedCommentsGrid />
                 </div>
             </Grid>
         </Container>

@@ -11,11 +11,11 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Link,
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import validator from 'validator';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/userSlice';
 
@@ -243,7 +243,9 @@ const MyProfileButton = () => {
                         </Dialog>
                     </DialogActions>
                 </Dialog>
-                <MenuItem onClick={handleMenuClose}>Мои заказы</MenuItem>
+                <Link href="/orders" color="inherit" underline="none">
+                    <MenuItem>Мои заказы</MenuItem>
+                </Link>
                 <MenuItem onClick={handleLogout}>Выйти</MenuItem>
             </Menu>
         </div>

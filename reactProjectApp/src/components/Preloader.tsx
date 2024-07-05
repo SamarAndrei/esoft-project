@@ -1,12 +1,15 @@
 import React from 'react';
-import axios from 'axios';
 import Spinner from './Spinner';
+import $api from '../http';
 
 const withDataFetching = (url: string) => (WrappedComponent: React.FC) => {
-    return function WithDataFetching(props: {}) {
+    return function WithDataFetching({ page, ...props }: { page?: number }) {
         const [data, setData] = React.useState([]);
         const [loading, setLoading] = React.useState(true);
         const [error, setError] = React.useState(null);
+        if (page) {
+            page -= 1;
+        }
 
         React.useEffect(() => {
             fetchData()
@@ -18,19 +21,33 @@ const withDataFetching = (url: string) => (WrappedComponent: React.FC) => {
                     setError(error);
                     setLoading(false);
                 });
-        }, []);
+        }, [page]);
 
         const fetchData = async () => {
             let result = undefined;
-            await axios
-                .get(url)
-                .then(function (response) {
-                    result = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            return result;
+            if (page) {
+                const offset = page * 3;
+                const limit = 3;
+                await $api
+                    .get(`${url}?offset=${offset}&limit=${limit}`)
+                    .then(function (response) {
+                        result = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                return result;
+            } else {
+                await $api
+                    .get(url)
+                    .then(function (response) {
+                        result = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                return result;
+            }
         };
 
         return (

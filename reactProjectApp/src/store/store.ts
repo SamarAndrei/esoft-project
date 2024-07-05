@@ -1,6 +1,7 @@
 import { favouritesApi } from './favouritesApi';
 import userReducer from './userSlice';
 import { cartApi } from './cartApi';
+import { ordersApi } from './ordersApi';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
     persistStore,
@@ -15,11 +16,11 @@ import {
 import storage from 'redux-persist/lib/storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 
-
 const rootReducer = combineReducers({
     user: userReducer,
     [cartApi.reducerPath]: cartApi.reducer,
     [favouritesApi.reducerPath]: favouritesApi.reducer,
+    [ordersApi.reducerPath]: ordersApi.reducer,
 });
 
 const persistConfig = {
@@ -45,7 +46,11 @@ const store = configureStore({
                     REGISTER,
                 ],
             },
-        }).concat(cartApi.middleware, favouritesApi.middleware),
+        }).concat(
+            cartApi.middleware,
+            favouritesApi.middleware,
+            ordersApi.middleware,
+        ),
 });
 
 export const persistor = persistStore(store);

@@ -1,17 +1,17 @@
 const express = require('express');
 const authenticateJWT = require('../middleware/authMiddleware.ts');
-const authorizeRole = require('../middleware/roleMiddleware.ts'); /** только для ролей */
+const authorizeRole = require('../middleware/roleMiddleware.ts');
 
-module.exports = ordersContoller => {
+module.exports = ordersController => {
     const router = express.Router();
 
-    router.post('/orders', authenticateJWT, ordersContoller.createOrder);
-    router.get('/orders', authenticateJWT, ordersContoller.getAllOrders);
+    router.post('/orders', authenticateJWT, ordersController.createOrder);
+    router.get('/orders', authenticateJWT, ordersController.getAllOrders);
     router.get(
-        '/orders/order_id',
+        '/orders/:order_id',
         authenticateJWT,
-        ordersContoller.getOrderById,
-    ); //и вернуть заказ о отсортировать order_items по order_id
+        ordersController.getOrderById,
+    );
 
     return router;
 };

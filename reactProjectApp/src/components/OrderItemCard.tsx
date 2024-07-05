@@ -1,14 +1,12 @@
+import { CardType } from './TCard';
 import {
     ButtonBase,
     Grid,
     Paper,
     Typography,
     styled,
-    IconButton,
     Button,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -17,10 +15,10 @@ const Img = styled('img')({
     maxHeight: '100%',
 });
 
-const CartAndFavouritesCard = ({ card, onDeleteClick, onAddClick }) => {
+const OrderItemCard = ({ item }: { item: CardType }) => {
     return (
         <Paper
-            key={card.id}
+            key={item.id}
             sx={{
                 p: 2,
                 marginTop: 4,
@@ -34,11 +32,11 @@ const CartAndFavouritesCard = ({ card, onDeleteClick, onAddClick }) => {
                 <Grid item>
                     <ButtonBase
                         sx={{ width: 100, height: 120 }}
-                        href={`/item/${card.id}`}
+                        href={`/item/${item.id}`}
                     >
                         <Img
-                            alt={`${card.brand} ${card.type}`}
-                            src={card.img[0]}
+                            alt={`${item.brand} ${item.type}`}
+                            src={item.img[0]}
                         />
                     </ButtonBase>
                 </Grid>
@@ -50,51 +48,27 @@ const CartAndFavouritesCard = ({ card, onDeleteClick, onAddClick }) => {
                                 variant="subtitle1"
                                 component="div"
                             >
-                                {`${card.brand} ${card.type}`}
+                                {`${item.brand} ${item.type}`}
                             </Typography>
                             <Typography variant="body2" gutterBottom>
-                                {card.description}
+                                {item.description}
                             </Typography>
                         </Grid>
                         <Grid item>
                             <Button
-                                href={`/item/${card.id}`}
+                                href={`/item/${item.id}`}
                                 size="small"
                                 color="primary"
                             >
                                 Подробнее
                             </Button>
-                            <IconButton
-                                size="small"
-                                aria-label="delete item"
-                                aria-haspopup="false"
-                                color="error"
-                                sx={{ mr: 1, marginLeft: 1 }}
-                                onClick={() => onDeleteClick(card.id)}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
                         </Grid>
                     </Grid>
                     <Grid item>
                         <Typography variant="subtitle1" component="div">
-                            Цена: {card.price} рублей
+                            Цена: {item.price} рублей
                         </Typography>
-                        {card.quantity && (
-                            <Typography>Количество: {card.quantity}</Typography>
-                        )}
-                        {onAddClick && (
-                            <IconButton
-                                size="small"
-                                aria-label="add item"
-                                aria-haspopup="false"
-                                color="inherit"
-                                sx={{ mr: 1, marginLeft: 1 }}
-                                onClick={() => onAddClick(card.id)}
-                            >
-                                <AddIcon />
-                            </IconButton>
-                        )}
+                        <Typography>Количество: {item.quantity}</Typography>
                     </Grid>
                 </Grid>
             </Grid>
@@ -102,4 +76,4 @@ const CartAndFavouritesCard = ({ card, onDeleteClick, onAddClick }) => {
     );
 };
 
-export default CartAndFavouritesCard;
+export default OrderItemCard;

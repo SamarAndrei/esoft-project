@@ -11,9 +11,12 @@ import {
     Typography,
 } from '@mui/material';
 import validator from 'validator';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { registration } from '../store/userSlice';
 
 const SignUpButton = () => {
+    const dispatch = useDispatch();
+
     const [openSignup, setOpenSignup] = React.useState(false);
 
     const [signupName, setSignupName] = React.useState('');
@@ -36,20 +39,17 @@ const SignUpButton = () => {
         validator.isEmail(signupEmail);
 
     const handleClickSignUpComplete = () => {
-        axios
-            .post('http://localhost:3000/api/registration', {
-                name: signupName,
-                email: signupEmail,
-                password: signupPassword,
-            })
-            .then(response => {
-                console.log(response);
-                setOpenSignup(false);
-            })
-            .catch(error => {
-                console.error(error);
-                setError(true);
-            });
+        try {
+            dispatch(
+                registration({
+                    name: signupName,
+                    email: signupEmail,
+                    password: signupPassword,
+                }),
+            );
+        } catch {
+            setError(true);
+        }
     };
 
     return (

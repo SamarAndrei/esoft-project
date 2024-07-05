@@ -1,4 +1,4 @@
-import { Container, Grid, Pagination, Stack, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import MainCard from './MainCard';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -36,16 +36,12 @@ const ProductionGrid: React.FC<{ data: CardType[] }> = ({ data }) => {
                             </Grid>
                         ))}
                     </Grid>
-                    <Grid container justifyContent="center" mt={4}>
-                        <Stack spacing={2}>
-                            <Pagination count={10} />
-                        </Stack>
-                    </Grid>
+                    <Grid container justifyContent="center" mt={4}></Grid>
                 </>
             ) : (
                 <Grid container justifyContent="center">
                     <Typography variant="h4">
-                        Ничего не найдено по запросу: {`<${qQuery}>`}
+                        Ничего не найдено по запросу или ассортимент кончился увы...: {`<${qQuery}>`}
                     </Typography>
                 </Grid>
             )}

@@ -43,6 +43,7 @@ class UserController {
             }
 
             const tokens = await this.userService.registration(req.body);
+            //Токен дейсвителен 1 месяц
             res.cookie('refreshToken', tokens.refreshToken, {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
@@ -73,6 +74,7 @@ class UserController {
     login = async (req, res, next) => {
         try {
             const tokens = await this.userService.login(req.body);
+            //Токен дейсвителен 1 месяц
             res.cookie('refreshToken', tokens.refreshToken, {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,

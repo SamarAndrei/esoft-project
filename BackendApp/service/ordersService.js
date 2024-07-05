@@ -16,8 +16,8 @@ class OrderService {
         return this.orderModel.getAll(user_id);
     }
 
-    async getOrderById(user_id, order_id) {
-        return this.orderModel.getById(user_id, order_id);
+    async getOrderById(order_id) {
+        return this.orderModel.getById(order_id);
     }
 }
 

@@ -1,5 +1,6 @@
 import { Box, Container, Divider, Typography, Button } from '@mui/material';
 import {
+    useAddCartItemMutation,
     useDeleteCartItemMutation,
     useGetCartItemsQuery,
 } from '../store/cartApi.ts';
@@ -27,16 +28,21 @@ import CartAndFavouritesCard from '../components/CartAndFavouritesCard.tsx';
 
 const CartPage = () => {
     const { data = [], isLoading, refetch } = useGetCartItemsQuery();
-
+    const [addCartItem] = useAddCartItemMutation();
     const [deleteCartItem] = useDeleteCartItemMutation();
 
-    const handleClickCart = async (id: number) => {
+    const handleDeleteClickCart = async (id: number) => {
         await deleteCartItem(id).unwrap();
         await refetch();
     };
 
-    if(data!=1){
-        console.log(data)
+    const handleAddClickCart = async (id: number) => {
+        await addCartItem(id).unwrap();
+        await refetch();
+    };
+
+    if (data != 1) {
+        console.log(data);
     }
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -53,10 +59,11 @@ const CartPage = () => {
                 {isLoading ? (
                     <Spinner />
                 ) : data != [] ? (
-                    data[1].map((card: CardType) => (
+                    data.map((card: CardType) => (
                         <CartAndFavouritesCard
                             card={card}
-                            onClick={handleClickCart}
+                            onDeleteClick={handleDeleteClickCart}
+                            onAddClick={handleAddClickCart}
                         />
                     ))
                 ) : (

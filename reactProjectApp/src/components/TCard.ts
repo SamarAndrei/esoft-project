@@ -8,4 +8,6 @@ export type CardType = {
     price: number;
     stock_quantity: number;
     gender: string;
+    quantity?: number;
+    averageRating?: number;
 };

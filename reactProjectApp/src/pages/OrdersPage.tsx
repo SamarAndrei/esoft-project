@@ -1,14 +1,14 @@
-import {
-    Box,
-    ButtonBase,
-    Container,
-    Divider,
-    Grid,
-    Paper,
-    Typography,
-} from '@mui/material';
+import { Box, Container, Divider, Typography } from '@mui/material';
+import { useGetOrdersQuery } from '../store/ordersApi';
+import { TOrder } from '../models/TOrder';
+import Spinner from '../components/Spinner';
+import OrderCard from '../components/OrderCard';
 
-const OrdersPage = orders => {
+const dateRegex = /\d{4}-\d{2}-\d{2}/;
+
+const OrdersPage = () => {
+    const { data = [], isLoading } = useGetOrdersQuery();
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Container fixed sx={{ marginTop: 10 }}>
@@ -18,60 +18,14 @@ const OrdersPage = orders => {
                     color="inherit"
                     gutterBottom
                 >
-                    Корзина
+                    Заказы
                 </Typography>
                 <Divider />
-                {orders.map(order => (
-                    <Paper
-                        key={order.id}
-                        sx={{
-                            p: 2,
-                            marginTop: 4,
-                            maxWidth: 500,
-                            flexGrow: 1,
-                            backgroundColor: theme =>
-                                theme.palette.mode === 'dark'
-                                    ? '#1A2027'
-                                    : '#fff',
-                        }}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item>
-                                <ButtonBase
-                                    sx={{ width: 100, height: 120 }}
-                                    href={`/item/${order.id}`}
-                                ></ButtonBase>
-                            </Grid>
-                            <Grid item xs={12} sm container>
-                                <Grid
-                                    item
-                                    xs
-                                    container
-                                    direction="column"
-                                    spacing={2}
-                                >
-                                    <Grid item xs>
-                                        <Typography
-                                            gutterBottom
-                                            variant="subtitle1"
-                                            component="div"
-                                        >
-                                            {`${order.brand} ${order.type}`}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid item>
-                                    <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                    >
-                                        Цена: {order.price} рублей
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                ))}
+                {isLoading ? (
+                    <Spinner />
+                ) : (
+                    data.map((order: TOrder) => <OrderCard order={order} />)
+                )}
             </Container>
         </Box>
     );

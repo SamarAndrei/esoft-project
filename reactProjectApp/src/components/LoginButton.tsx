@@ -15,7 +15,6 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice';
 
 const LoginButton = () => {
-    // const store = useSelector((state: unknown) => state.user);
     const dispatch = useDispatch();
 
     const [openWinLogin, setOpenWinLogin] = React.useState(false);

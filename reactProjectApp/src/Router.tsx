@@ -6,6 +6,7 @@ import FavouritesPage from './pages/FavouritesPage';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import OrdersPage from './pages/OrdersPage';
+import OneOrderPage from './pages/OneOrderPage';
 
 const routes = [
     { path: '', element: <HomePage /> },
@@ -14,6 +15,7 @@ const routes = [
     { path: 'cart', element: <CartPage /> },
     { path: 'favourite', element: <FavouritesPage /> },
     { path: 'orders', element: <OrdersPage /> },
+    { path: 'orders/:orderId', element: <OneOrderPage /> },
 ];
 
 export const Router = () => (

@@ -7,10 +7,11 @@ class ProdController {
 
     getAllProd = async (req, res, next) => {
         try {
-            const prod = await this.prodService.getAllProd(
-                req.body.offset,
-                req.body.limit,
-            );
+
+            const offset = parseInt(req.query.offset) || 0;
+            const limit = parseInt(req.query.limit) || 3;
+
+            const prod = await this.prodService.getAllProd(offset, limit);
             res.status(200).json(prod);
         } catch (e) {
             next(e);

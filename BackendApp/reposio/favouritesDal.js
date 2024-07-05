@@ -24,14 +24,7 @@ class FavouritesModel {
     }
 
     async getAll(user_id) {
-        // const redisKey = `favourites:all:${user_id}`;
-
         try {
-            // let favourites = await redisClient.get(redisKey);
-            // if (favourites) {
-            //     return JSON.parse(favourites);
-            // }
-
             const query = pool('favourites');
             const favourites_items = await query.where({ user_id: user_id }).select();
             const prodIds = favourites_items.map(item => item.prod_id);
@@ -40,11 +33,6 @@ class FavouritesModel {
                 .whereIn('id', prodIds)
                 .select();
 
-            // if (favourites) {
-            //     await redisClient.set(redisKey, JSON.stringify(favourites), {
-            //         EX: 20,
-            //     });
-            // }
             return favourites;
         } catch (err) {
             console.error('Error fetching favourites', err);
