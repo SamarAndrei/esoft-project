@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
 
     const handlePageChange = (
         event: React.ChangeEvent<unknown>,
@@ -22,11 +23,14 @@ const HomePage = () => {
             <PaperMainPage />
             <BlockDescription />
             <ErrorBoundary FallbackComponent={Fallback}>
-                <EnhancedProductionGrid page={currentPage} />
+                <EnhancedProductionGrid
+                    page={currentPage}
+                    setTotalPage={setTotalPage}
+                />
             </ErrorBoundary>
             <Grid container justifyContent="center">
                 <Stack spacing={2}>
-                    <Pagination count={10} onChange={handlePageChange} />
+                    <Pagination count={totalPage} onChange={handlePageChange} />
                 </Stack>
             </Grid>
         </body>

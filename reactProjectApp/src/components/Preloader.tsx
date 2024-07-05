@@ -3,7 +3,14 @@ import Spinner from './Spinner';
 import $api from '../http';
 
 const withDataFetching = (url: string) => (WrappedComponent: React.FC) => {
-    return function WithDataFetching({ page, ...props }: { page?: number }) {
+    return function WithDataFetching({
+        page,
+        setTotalPage,
+        ...props
+    }: {
+        page?: number;
+        setTotalPage?: any;
+    }) {
         const [data, setData] = React.useState([]);
         const [loading, setLoading] = React.useState(true);
         const [error, setError] = React.useState(null);
@@ -14,8 +21,9 @@ const withDataFetching = (url: string) => (WrappedComponent: React.FC) => {
         React.useEffect(() => {
             fetchData()
                 .then(result => {
-                    setData(result);
+                    setData(result.production);
                     setLoading(false);
+                    setTotalPage(result.totalPages);
                 })
                 .catch(error => {
                     setError(error);
