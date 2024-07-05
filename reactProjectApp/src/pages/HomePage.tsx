@@ -5,11 +5,21 @@ import withDataFetching from '../components/Preloader';
 import ProductionGrid from '../components/ProductionGrid';
 import BlockDescription from '../components/BlockDescription';
 import { Grid, Pagination, Stack } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [searchParams] = useSearchParams();
+
+    const qQuery = searchParams.getAll('q')[0] || '';
+    const genderQuery = searchParams.getAll('gender')[0] || '';
+    const typeQuery = searchParams.getAll('type')[0] || '';
+
+    useEffect(() => {
+        setTotalPage(1);
+    }, [qQuery, genderQuery, typeQuery]);
 
     const handlePageChange = (
         event: React.ChangeEvent<unknown>,
@@ -26,6 +36,9 @@ const HomePage = () => {
                 <EnhancedProductionGrid
                     page={currentPage}
                     setTotalPage={setTotalPage}
+                    qQuery={qQuery}
+                    genderQuery={genderQuery}
+                    typeQuery={typeQuery}
                 />
             </ErrorBoundary>
             <Grid container justifyContent="center">

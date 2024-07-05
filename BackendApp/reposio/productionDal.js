@@ -14,27 +14,55 @@ class ProdModel {
         }
     }
 
-    async getAll(offset, limit) {
-        const redisKey = `production:${offset}:${limit}`;
+    async getAll(offset, limit, q, gender, type) {
+        const redisKey = `production:${offset}:${limit}:${q}:${gender}:${type}`;
 
         try {
-            // let production = await redisClient.get(redisKey);
-            // if (production) {
-            //     return JSON.parse(production);
-            // }
+            let production = await redisClient.get(redisKey);
+            if (production) {
+                return JSON.parse(production);
+            }
 
-            const query = pool('production');
-            const production = await query
-                .select('*')
-                .from('production')
-                .limit(limit)
-                .offset(offset);
+            let query = pool('production');
 
-            // if (production) {
-            //     await redisClient.set(redisKey, JSON.stringify(production), {
-            //         EX: 20,
-            //     });
-            // }
+            let productionItems = null;
+
+            if (q && q !== '') {
+                query = query
+                    .orWhere('brand', 'ilike', `%${q}%`)
+                    .orWhere('description', 'ilike', `%${q}%`);
+            }
+
+            if (gender && gender !== '') {
+                query = query.where('gender', 'ilike', `%${gender}%`);
+            }
+
+            if (type && type !== '') {
+                query = query.where('type', 'ilike', `%${type}%`);
+            }
+
+            let countQuery = query.clone();
+
+            productionItems = await query.limit(limit).offset(offset);
+
+            let totalCount = null;
+
+            totalCount = await countQuery.count('* as total').first();
+
+            const total = totalCount.total;
+
+            const totalPages = Math.ceil(total / limit);
+
+            production = {
+                production: productionItems,
+                totalPages: totalPages,
+            };
+
+            if (production) {
+                await redisClient.set(redisKey, JSON.stringify(production), {
+                    EX: 20,
+                });
+            }
 
             return production;
         } catch (err) {
@@ -53,9 +81,7 @@ class ProdModel {
                 return JSON.parse(product);
             }
 
-            product = await pool('production')
-                .where('id', prod_id)
-                .first();
+            product = await pool('production').where('id', prod_id).first();
             const comments = await pool('comments')
                 .where('prod_id', prod_id)
                 .select();

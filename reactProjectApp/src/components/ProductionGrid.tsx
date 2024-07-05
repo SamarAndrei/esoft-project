@@ -11,19 +11,8 @@ const ProductionGrid: React.FC<{ data: CardType[] }> = ({ data }) => {
     const [items, setData] = useState(data);
 
     useEffect(() => {
-        if (qQuery !== '') {
-            const lowerCaseQuery = qQuery.toLowerCase();
-            setData(
-                data.filter(
-                    item =>
-                        item.brand.toLowerCase().includes(lowerCaseQuery) ||
-                        item.description.toLowerCase().includes(lowerCaseQuery),
-                ),
-            );
-        } else {
-            setData(data);
-        }
-    }, [qQuery, data, items]);
+        setData(data);
+    }, [qQuery, data]);
 
     return (
         <Container id="cards" sx={{ marginTop: 8 }}>
@@ -41,7 +30,8 @@ const ProductionGrid: React.FC<{ data: CardType[] }> = ({ data }) => {
             ) : (
                 <Grid container justifyContent="center">
                     <Typography variant="h4">
-                        Ничего не найдено по запросу или ассортимент кончился увы...: {`<${qQuery}>`}
+                        Ничего не найдено по запросу или ассортимент кончился
+                        увы...: {`<${qQuery}>`}
                     </Typography>
                 </Grid>
             )}
