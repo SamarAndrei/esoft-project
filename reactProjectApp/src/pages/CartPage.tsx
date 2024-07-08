@@ -7,24 +7,7 @@ import {
 import { CardType } from '../components/TCard.js';
 import Spinner from '../components/Spinner.tsx';
 import CartAndFavouritesCard from '../components/CartAndFavouritesCard.tsx';
-
-// const averageRating = (card, data) => {
-//     let sum = 0;
-//     let count = 0;
-
-//     for (let item of data[2]) {
-//         if (item.prod_id === card.id) {
-//             sum += item.rating;
-//             count++;
-//         }
-//     }
-
-//     if (count === 0) {
-//         return 0;
-//     }
-
-//     return sum / count;
-// };
+import ToBuyButton from '../components/ToBuyButton.tsx';
 
 const CartPage = () => {
     const { data = [], isLoading, refetch } = useGetCartItemsQuery();
@@ -58,7 +41,7 @@ const CartPage = () => {
                 <Divider />
                 {isLoading ? (
                     <Spinner />
-                ) : data != [] ? (
+                ) : data.length > 0 ? (
                     data.map((card: CardType) => (
                         <CartAndFavouritesCard
                             card={card}
@@ -73,9 +56,7 @@ const CartPage = () => {
                 <Typography variant="h5" color="inherit" gutterBottom>
                     Итого
                 </Typography>
-                <Button size="large" color="secondary" variant="contained">
-                    Перейти к оплате
-                </Button>
+                <ToBuyButton />
             </Container>
         </Box>
     );

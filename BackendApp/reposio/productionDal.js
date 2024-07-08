@@ -1,5 +1,6 @@
 const pool = require('../db');
 const { redisClient } = require('../redis');
+const ApiError = require('../exceptions/api_error');
 
 class ProdModel {
     async create(prodData) {
@@ -7,8 +8,8 @@ class ProdModel {
             const query = pool('production');
             await query.insert(prodData);
         } catch (err) {
-            console.error('Ошибка создания продукта', err);
-            throw err;
+            console.error('Error creating production', err);
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -66,7 +67,8 @@ class ProdModel {
 
             return production;
         } catch (err) {
-            console.error('Error fetching production', err);
+            ApiError.BadConnectToDB(errors.array());
+
             throw err;
         } finally {
         }
@@ -82,11 +84,15 @@ class ProdModel {
             }
 
             product = await pool('production').where('id', prod_id).first();
-            const comments = await pool('comments')
-                .where('prod_id', prod_id)
-                .select();
 
-            if (comments.length > 0) {
+            let comments = [];
+            if (product) {
+                comments = await pool('comments')
+                    .where('prod_id', prod_id)
+                    .select();
+            }
+
+            if (comments.length > 0 && product) {
                 const sum = comments.reduce(
                     (total, comment) => total + comment.rating,
                     0,
@@ -94,7 +100,9 @@ class ProdModel {
                 const averageRating = sum / comments.length;
                 product.averageRating = averageRating;
             } else {
-                product.averageRating = 0;
+                if (product) {
+                    product.averageRating = 0;
+                }
             }
 
             if (product) {
@@ -106,7 +114,7 @@ class ProdModel {
             return product;
         } catch (err) {
             console.error('Error fetching prodItem by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -121,7 +129,7 @@ class ProdModel {
             return prodItem;
         } catch (err) {
             console.error('Error fetching prodItem by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

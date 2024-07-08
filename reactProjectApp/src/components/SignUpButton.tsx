@@ -13,6 +13,7 @@ import {
 import validator from 'validator';
 import { useDispatch } from 'react-redux';
 import { registration } from '../store/userSlice';
+import useValidateFields from './hooks/useValidateFields';
 
 const SignUpButton = () => {
     const dispatch = useDispatch();
@@ -32,11 +33,11 @@ const SignUpButton = () => {
         setError(false);
         setOpenSignup(newOpen);
     };
-    const isSignupFieldsFilled =
-        signupName &&
-        signupEmail &&
-        signupPassword.length >= 8 &&
-        validator.isEmail(signupEmail);
+    const isSignupFieldsFilled = useValidateFields(
+        signupEmail,
+        signupPassword,
+        signupName,
+    );
 
     const handleClickSignUpComplete = () => {
         try {

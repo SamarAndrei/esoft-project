@@ -35,7 +35,6 @@ class OrderController {
     createOrder = async (req, res, next) => {
         try {
             const user_id = parseInt(req.user.id, 10);
-
             const newProdItem = await this.orderService.createOrder(
                 req.body,
                 user_id,

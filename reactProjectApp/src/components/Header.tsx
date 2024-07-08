@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     AppBar,
     Box,
@@ -15,18 +15,10 @@ import IconsCartAndFavourites from './IconsCartAndFavourites';
 import LoginButton from './LoginButton';
 import SignUpButton from './SignUpButton';
 import MyProfileButton from './MyProfileButton';
-import { useSelector, useDispatch } from 'react-redux';
-import { checkAuth } from '../store/userSlice';
+import useCheckAuth from './hooks/useCheckAuth';
 
 const Header = React.memo(() => {
-    const store = useSelector((state: unknown) => state.user);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (localStorage.getItem('token')) {
-            dispatch(checkAuth());
-        }
-    }, [dispatch, store.isAuth]);
+    const store = useCheckAuth();
 
     const [open, setOpen] = React.useState(false);
 

@@ -10,9 +10,9 @@ import {
     DialogActions,
     Typography,
 } from '@mui/material';
-import validator from 'validator';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice';
+import useValidateFields from './hooks/useValidateFields';
 
 const LoginButton = () => {
     const dispatch = useDispatch();
@@ -31,10 +31,7 @@ const LoginButton = () => {
         setOpenWinLogin(newOpen);
     };
 
-    const isLoginFieldsFilled =
-        loginEmail &&
-        loginPassword.length >= 8 &&
-        validator.isEmail(loginEmail);
+    const isLoginFieldsFilled = useValidateFields(loginEmail, loginPassword);
 
     const handleClickWinLogInComplete = () => {
         try {

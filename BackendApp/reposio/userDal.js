@@ -1,5 +1,6 @@
 const pool = require('../db');
 const { redisClient } = require('../redis');
+const ApiError = require('../exceptions/api_error');
 
 // type User = {
 //     user_id: number,
@@ -16,7 +17,7 @@ class UserModel {
             const query = pool('users');
             await query.insert(userData);
         } catch (err) {
-            console.error('Ошибка создания юзера', err);
+            console.error('Error creating user', err);
             throw err;
         } finally {
             // await pool.destroy();
@@ -28,7 +29,7 @@ class UserModel {
             const query = pool('users');
             await query.insert(userData);
         } catch (err) {
-            console.error('Ошибка создания юзера', err);
+            console.error('Error creating user', err);
             throw err;
         } finally {
             // await pool.destroy();
@@ -59,7 +60,7 @@ class UserModel {
             return users;
         } catch (err) {
             console.error('Error fetching user by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -84,7 +85,7 @@ class UserModel {
             return user;
         } catch (err) {
             console.error('Error fetching user by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -98,13 +99,12 @@ class UserModel {
                     name: userData.name,
                     email: userData.email,
                     password: userData.password,
-                },
-                ['id', 'name', 'email'],
+                }
             );
             return user;
         } catch (err) {
             console.error('Error fetching user by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -117,7 +117,7 @@ class UserModel {
             return user;
         } catch (err) {
             console.error('Error fetching user by Email', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

@@ -102,6 +102,7 @@ class UserController {
         try {
             const { refreshToken } = req.cookies;
             const tokens = await this.userService.refresh(refreshToken);
+            //Токен дейсвителен 1 месяц
             res.cookie('refreshToken', tokens.refreshToken, {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
@@ -115,9 +116,8 @@ class UserController {
 
     updateUser = async (req, res, next) => {
         try {
-            const userId = parseInt(req.params.id, 10);
             const updatedUser = await this.userService.updateUser(
-                userId,
+                parseInt(req.user.id, 10),
                 req.body,
             );
 

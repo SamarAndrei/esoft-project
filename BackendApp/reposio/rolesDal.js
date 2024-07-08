@@ -1,4 +1,5 @@
 const pool = require('../db');
+const ApiError = require('../exceptions/api_error');
 
 // type User = {
 //     user_id: number,
@@ -25,7 +26,7 @@ class RolesModel {
             }
         } catch (err) {
             console.error('Error fetching role by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

@@ -1,4 +1,5 @@
 const pool = require('../db');
+const ApiError = require('../exceptions/api_error');
 
 module.exports = new (class TokenModel {
     async findById(user_id) {
@@ -12,7 +13,7 @@ module.exports = new (class TokenModel {
             }
         } catch (err) {
             console.error('Error fetching token by user_ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -27,7 +28,7 @@ module.exports = new (class TokenModel {
             return token;
         } catch (err) {
             console.error('Error fetching token by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -42,8 +43,8 @@ module.exports = new (class TokenModel {
             );
             return token;
         } catch (err) {
-            console.error('Ошибка создания рефреш токена', err);
-            throw err;
+            console.error('Error creating refreshToken', err);
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -55,7 +56,7 @@ module.exports = new (class TokenModel {
             const token = await query.where('token', refreshToken).delete();
         } catch (err) {
             console.error('Error fetching token by refreshToken', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

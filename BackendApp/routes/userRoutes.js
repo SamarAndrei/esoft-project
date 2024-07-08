@@ -33,8 +33,12 @@ module.exports = userContoller => {
         userContoller.createRole,
     );
     router.get('/users', authorizeRole(['admin']), userContoller.getAllUsers);
-    router.get('/users/:id', authenticateJWT, userContoller.getUserById);
-    router.put('/users/:id', authenticateJWT, userContoller.updateUser);
+    router.get(
+        '/users/:id',
+        authorizeRole(['admin']),
+        userContoller.getUserById,
+    );
+    router.put('/users', authenticateJWT, userContoller.updateUser);
 
     return router;
 };

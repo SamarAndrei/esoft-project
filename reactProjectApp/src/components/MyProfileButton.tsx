@@ -15,10 +15,10 @@ import {
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import validator from 'validator';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/userSlice';
-
+import { useAnyFieldsFilled } from './hooks/useAnyFieldsFilled';
+import UserService from '../service/userService';
 const menuId = 'primary-search-account-menu';
 const mobileMenuId = 'primary-search-account-menu-mobile';
 
@@ -28,6 +28,8 @@ const MyProfileButton = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
+
+    const [errors, setErrors] = React.useState('');
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -61,25 +63,52 @@ const MyProfileButton = () => {
     };
 
     const handleClickWinUpdateProfileChange = () => {
-        handleClickWinUpdateСonfirm(true);
+        handleClickWinUpdateConfirm(true);
     };
 
-    const handleClickWinUpdateСonfirm = (newOpen: boolean) => {
-        setOpenWinUpdateСonfirm(newOpen);
+    const handleClickWinUpdateConfirm = (newOpen: boolean) => {
+        setOpenWinUpdateConfirm(newOpen);
+    };
+
+    const handleClickUpdateConfirm = async (newOpen: boolean) => {
+        let userData = {};
+        if (updatepName != '') {
+            userData.name = updatepName;
+        }
+
+        if (updateEmail != '') {
+            userData.email = updateEmail;
+        }
+
+        if (updatePassword != '') {
+            userData.password = updatePassword;
+        }
+
+        if (userData != []) {
+            console.log(userData);
+        }
+
+        await UserService.putUser(userData).catch(() => setErrors(true));
+        setOpenWinUpdateConfirm(newOpen);
+        setopenWinUpdateProfile(newOpen);
+    };
+
+    const handleClickWinUpdateCancel = (newOpen: boolean) => {
+        setOpenWinUpdateConfirm(newOpen);
     };
 
     const [updatepName, setUpdatepName] = React.useState('');
     const [updateEmail, setUpdateEmail] = React.useState('');
     const [updatePassword, setUpdatePassword] = React.useState('');
 
-    const [openWinUpdateСonfirm, setOpenWinUpdateСonfirm] =
+    const [openWinUpdateConfirm, setOpenWinUpdateConfirm] =
         React.useState(false);
 
-    const isUpdateFieldsFilled =
-        updatepName &&
-        updateEmail &&
-        updatePassword.length >= 8 &&
-        validator.isEmail(updateEmail);
+    const isUpdateFieldsFilled = useAnyFieldsFilled(
+        updateEmail,
+        updatePassword,
+        updatepName,
+    );
 
     const handleLogout = () => {
         dispatch(logout());
@@ -213,8 +242,8 @@ const MyProfileButton = () => {
                             Изменить
                         </Button>
                         <Dialog
-                            open={openWinUpdateСonfirm}
-                            onClose={() => handleClickWinUpdateСonfirm(false)}
+                            open={openWinUpdateConfirm}
+                            onClose={() => handleClickWinUpdateConfirm(false)}
                             aria-labelledby="alert-dialog-confirm-update"
                         >
                             <DialogTitle>Подтверждение</DialogTitle>
@@ -222,18 +251,24 @@ const MyProfileButton = () => {
                                 <DialogContentText>
                                     Вы согласны изменить данные?
                                 </DialogContentText>
+                                {errors && (
+                                    <DialogContentText color="red">
+                                        Ошибка. Скорее всего с этим емейлом кто
+                                        то уже зарегистрирован
+                                    </DialogContentText>
+                                )}
                             </DialogContent>
                             <DialogActions>
                                 <Button
                                     onClick={() =>
-                                        handleClickWinUpdateСonfirm(false)
+                                        handleClickWinUpdateCancel(false)
                                     }
                                 >
                                     Отмена
                                 </Button>
                                 <Button
                                     onClick={() =>
-                                        handleClickWinUpdateСonfirm(false)
+                                        handleClickUpdateConfirm(false)
                                     }
                                     autoFocus
                                 >

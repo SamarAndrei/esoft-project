@@ -1,5 +1,6 @@
 const pool = require('../db');
 const { redisClient } = require('../redis');
+const ApiError = require('../exceptions/api_error');
 
 // type User = {
 //     user_id: number,
@@ -16,8 +17,8 @@ class CommModel {
             const query = pool('comments');
             await query.insert(commData);
         } catch (err) {
-            console.error('Ошибка создания коммента', err);
-            throw err;
+            console.error('Error creating comment', err);
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -48,7 +49,7 @@ class CommModel {
             return comms;
         } catch (err) {
             console.error('Error fetching comment by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -75,7 +76,7 @@ class CommModel {
             return comms;
         } catch (err) {
             console.error('Error fetching comments by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

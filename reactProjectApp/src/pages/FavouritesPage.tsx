@@ -17,7 +17,7 @@ const FavouritesPage = () => {
     const [deleteFavourite] = useDeleteFavouriteMutation();
 
     const handleClickFavorite = async (id: number) => {
-        await deleteFavourite(id);
+        await deleteFavourite(id).unwrap();
         await refetch();
     };
 
@@ -35,11 +35,11 @@ const FavouritesPage = () => {
                 <Divider />
                 {isLoading ? (
                     <Spinner />
-                ) : favourites != [] ? (
+                ) : favourites.length > 0 ? (
                     favourites.map((card: CardType) => (
                         <CartAndFavouritesCard
                             card={card}
-                            onClick={handleClickFavorite}
+                            onDeleteClick={handleClickFavorite}
                         />
                     ))
                 ) : (

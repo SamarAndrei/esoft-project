@@ -122,6 +122,14 @@ class UserService {
     }
 
     async updateUser(id, userData) {
+        const existingUser = await this.userModel.findByEmail(userData.email);
+
+        if (existingUser) {
+            throw ApiError.BadRequest(
+                `Пользователь с почтовым адресом ${email} уже существует`,
+            );
+        }
+
         let hashedPassword = '';
         if (userData.password) {
             hashedPassword = await bcrypt.hash(
@@ -134,7 +142,7 @@ class UserService {
             {},
             userData.name && { name: userData.name },
             userData.email && { email: userData.email },
-            hashedPassword,
+            hashedPassword !== '' && { hashedPassword },
         );
         return this.userModel.update(id, newUserData);
     }

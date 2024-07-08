@@ -5,10 +5,7 @@ class OrderService {
 
     async createOrder(orderData, user_id) {
         const newOrderData = { user_id: user_id, status: orderData.status };
-        const newOrderItemsData = {
-            prod_id: orderData.prod_id,
-            quantity: orderData.quantity,
-        };
+        const newOrderItemsData = orderData.data;
         return this.orderModel.create(newOrderData, newOrderItemsData);
     }
 

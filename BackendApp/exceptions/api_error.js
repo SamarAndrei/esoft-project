@@ -20,6 +20,10 @@ module.exports = class ApiError extends Error {
         return new ApiError(400, message, errors);
     }
 
+    static BadConnectToDB(errors = []) {
+        return new ApiError(400, 'Ошибка связанная с базой данных', errors);
+    }
+
     static NotFound(message, errors = []) {
         return new ApiError(404, message, errors);
     }

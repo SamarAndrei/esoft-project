@@ -1,5 +1,5 @@
 const pool = require('../db');
-const { redisClient } = require('../redis');
+const ApiError = require('../exceptions/api_error');
 
 // type User = {
 //     user_id: number,
@@ -15,12 +15,14 @@ class CartModel {
         try {
             const existingItem = await pool('cart_items')
                 .where({
+                    user_id: cartItemData.user_id,
                     prod_id: cartItemData.prod_id,
                 })
                 .first();
             if (existingItem) {
                 await pool('cart_items')
                     .where({
+                        user_id: cartItemData.user_id,
                         prod_id: cartItemData.prod_id,
                     })
                     .update({
@@ -31,8 +33,8 @@ class CartModel {
                 await query.insert(cartItemData);
             }
         } catch (err) {
-            console.error('Ошибка добавления в корзину', err);
-            throw err;
+            console.error('Error adding to cart', err);
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -48,7 +50,7 @@ class CartModel {
             return cart;
         } catch (err) {
             console.error('Error fetching cart_items', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -60,7 +62,7 @@ class CartModel {
             await query.where({ user_id: user_id, prod_id: prod_id }).delete();
         } catch (err) {
             console.error('Error fetching cart_item by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

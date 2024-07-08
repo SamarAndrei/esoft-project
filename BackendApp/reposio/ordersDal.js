@@ -1,5 +1,6 @@
 const pool = require('../db');
 const { redisClient } = require('../redis');
+const ApiError = require('../exceptions/api_error');
 
 // type User = {
 //     user_id: number,
@@ -13,14 +14,21 @@ const { redisClient } = require('../redis');
 class OrderModel {
     async create(newOrderData, newOrderItemsData) {
         try {
-            const order = await pool('orders').insert(newOrderData);
-            await pool('order_items').insert({
-                order_id: order.id,
-                ...newOrderItemsData,
+            const order = await pool('orders').insert(newOrderData, 'id');
+
+            const promises = newOrderItemsData.map(async item => {
+                const newItem = {
+                    order_id: order[0].id,
+                    prod_id: item.id,
+                    quantity: item.quantity,
+                };
+                await pool('order_items').insert(newItem);
             });
+
+            await Promise.all(promises);
         } catch (err) {
-            console.error('Ошибка создания заказа', err);
-            throw err;
+            console.error('Error creating order', err);
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -34,7 +42,7 @@ class OrderModel {
             return orders;
         } catch (err) {
             console.error('Error fetching orders', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -55,14 +63,14 @@ class OrderModel {
 
             if (orderItems) {
                 await redisClient.set(redisKey, JSON.stringify(orderItems), {
-                    EX: 10,
+                    EX: 20,
                 });
             }
 
             return orderItems;
         } catch (err) {
             console.error('Error fetching orderItems by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

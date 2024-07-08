@@ -1,5 +1,5 @@
 const pool = require('../db');
-const { redisClient } = require('../redis');
+const ApiError = require('../exceptions/api_error');
 
 // type User = {
 //     user_id: number,
@@ -17,7 +17,7 @@ class FavouritesModel {
             await query.insert(favouriteData);
         } catch (err) {
             console.error('Ошибка добавления в избранное', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -26,7 +26,9 @@ class FavouritesModel {
     async getAll(user_id) {
         try {
             const query = pool('favourites');
-            const favourites_items = await query.where({ user_id: user_id }).select();
+            const favourites_items = await query
+                .where({ user_id: user_id })
+                .select();
             const prodIds = favourites_items.map(item => item.prod_id);
 
             const favourites = await pool('production')
@@ -36,7 +38,7 @@ class FavouritesModel {
             return favourites;
         } catch (err) {
             console.error('Error fetching favourites', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }
@@ -45,12 +47,10 @@ class FavouritesModel {
     async delete(user_id, prod_id) {
         try {
             const query = pool('favourites');
-            await query
-                .where({ user_id: user_id, prod_id: prod_id })
-                .delete();
+            await query.where({ user_id: user_id, prod_id: prod_id }).delete();
         } catch (err) {
             console.error('Error fetching favouriteItem by ID', err);
-            throw err;
+            ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
         }

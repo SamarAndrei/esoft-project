@@ -39,7 +39,7 @@ const withDataFetching = (url: string) => (WrappedComponent: React.FC) => {
                 .then(result => {
                     if (!isProductionGridResponse(result)) {
                         setData(result);
-                        console.log(result);
+                        // console.log(result);
                     } else {
                         setData(result.production);
                     }
