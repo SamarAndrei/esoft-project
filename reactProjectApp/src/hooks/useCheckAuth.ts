@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { checkAuth } from '../../store/userSlice';
+import { checkAuth } from '../store/userSlice';
 import { useEffect } from 'react';
 
 const useCheckAuth = () => {

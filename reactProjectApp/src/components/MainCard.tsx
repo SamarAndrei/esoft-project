@@ -71,6 +71,7 @@ const MainCard = ({ card }: { card: CardType }) => {
                     </Link>
                     {existInFavouriteList ? (
                         <IconButton
+                            id={`del-favourite-item-${card.id}`}
                             size="large"
                             aria-label="add item in cart"
                             aria-haspopup="false"
@@ -83,6 +84,7 @@ const MainCard = ({ card }: { card: CardType }) => {
                         </IconButton>
                     ) : (
                         <IconButton
+                            id={`add-favourite-item-${card.id}`}
                             size="large"
                             aria-label="add item in cart"
                             aria-haspopup="false"
@@ -93,6 +95,7 @@ const MainCard = ({ card }: { card: CardType }) => {
                         </IconButton>
                     )}
                     <IconButton
+                        id={`add-cart-item-${card.id}`}
                         size="large"
                         aria-label="add item in cart"
                         aria-haspopup="false"

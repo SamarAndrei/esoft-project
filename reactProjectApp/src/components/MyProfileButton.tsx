@@ -17,7 +17,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/userSlice';
-import { useAnyFieldsFilled } from './hooks/useAnyFieldsFilled';
+import { useAnyFieldsFilled } from '../hooks/useAnyFieldsFilled';
 import UserService from '../service/userService';
 const menuId = 'primary-search-account-menu';
 const mobileMenuId = 'primary-search-account-menu-mobile';

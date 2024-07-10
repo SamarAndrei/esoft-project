@@ -13,7 +13,7 @@ import {
 import validator from 'validator';
 import { useDispatch } from 'react-redux';
 import { registration } from '../store/userSlice';
-import useValidateFields from './hooks/useValidateFields';
+import useValidateFields from '../hooks/useValidateFields';
 
 const SignUpButton = () => {
     const dispatch = useDispatch();

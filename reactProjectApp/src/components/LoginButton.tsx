@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice';
-import useValidateFields from './hooks/useValidateFields';
+import useValidateFields from '../hooks/useValidateFields';
 
 const LoginButton = () => {
     const dispatch = useDispatch();
@@ -44,6 +44,7 @@ const LoginButton = () => {
     return (
         <Box mr={1}>
             <Button
+                id="login-button"
                 color="inherit"
                 variant="outlined"
                 onClick={() => handleClickWinLogIn(true)}
@@ -97,6 +98,7 @@ const LoginButton = () => {
                         Отмена
                     </Button>
                     <Button
+                        id='login-confirm'
                         onClick={() => handleClickWinLogInComplete()}
                         variant="contained"
                         color="secondary"

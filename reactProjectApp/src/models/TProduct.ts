@@ -9,4 +9,4 @@ export type TProduct = {
     size: string[];
     stock_quantity: number;
     type: string;
-}
+};

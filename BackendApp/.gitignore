@@ -1,6 +1,8 @@
 node_modules
 .env
 knexfile.ts
+coverage
+dist
 
 .vscode/*
 !.vscode/extensions.json

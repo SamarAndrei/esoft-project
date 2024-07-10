@@ -81,6 +81,16 @@ class CommModel {
             // await pool.destroy();
         }
     }
+
+    async deleteCommentForTest(comment) {
+        try {
+            const query = pool('comments');
+            await query.where('comment', comment).delete();
+        } catch {
+            console.error('Error fetching comment by comment', err);
+            ApiError.BadConnectToDB(errors.array());
+        }
+    }
 }
 
 module.exports = new CommModel();

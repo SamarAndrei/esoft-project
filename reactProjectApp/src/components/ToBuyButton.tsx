@@ -8,13 +8,13 @@ import {
     TextField,
 } from '@mui/material';
 import React from 'react';
-import { getPayment } from './helpers/getPayment';
+import { getPayment } from '../helpers/getPayment';
 import {
     useDeleteCartItemMutation,
     useGetCartItemsQuery,
 } from '../store/cartApi';
 import Spinner from './Spinner';
-import { isFieldsFilled } from './helpers/isFieldsFilled';
+import { isFieldsFilled } from '../helpers/isFieldsFilled';
 import OrderService from '../service/orderService';
 import { CardType } from './TCard';
 

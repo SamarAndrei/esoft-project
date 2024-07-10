@@ -22,6 +22,7 @@ const IconsCartAndFavourites = () => {
                 href="/favourite"
             >
                 <Badge
+                    id="favourite-badge"
                     color="secondary"
                     badgeContent={isLoadingFavourites ? 0 : favourites.length}
                     showZero
@@ -38,6 +39,7 @@ const IconsCartAndFavourites = () => {
                 href="/cart"
             >
                 <Badge
+                    id="cart-badge"
                     color="secondary"
                     badgeContent={
                         isLoadingCart && cartItems ? 0 : cartItems.length

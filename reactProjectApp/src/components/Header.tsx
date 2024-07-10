@@ -15,7 +15,7 @@ import IconsCartAndFavourites from './IconsCartAndFavourites';
 import LoginButton from './LoginButton';
 import SignUpButton from './SignUpButton';
 import MyProfileButton from './MyProfileButton';
-import useCheckAuth from './hooks/useCheckAuth';
+import useCheckAuth from '../hooks/useCheckAuth';
 
 const Header = React.memo(() => {
     const store = useCheckAuth();

@@ -65,6 +65,7 @@ const CartAndFavouritesCard = ({ card, onDeleteClick, onAddClick }) => {
                                 Подробнее
                             </Button>
                             <IconButton
+                                id={`delete-btn-${card.id}`}
                                 size="small"
                                 aria-label="delete item"
                                 aria-haspopup="false"

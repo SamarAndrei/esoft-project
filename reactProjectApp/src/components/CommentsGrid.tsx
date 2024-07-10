@@ -23,14 +23,13 @@ const CommentsGrid = ({ data }) => {
                     Отзывы
                 </Typography>
                 <Divider />
-                {data != [] ? (
+                {data.length > 0 ? (
                     data.map((order: TComment) => (
                         <Paper
                             key={order.id}
                             sx={{
                                 p: 2,
                                 marginTop: 4,
-                                maxWidth: 500,
                                 flexGrow: 1,
                                 backgroundColor: theme =>
                                     theme.palette.mode === 'dark'
@@ -72,6 +71,10 @@ const CommentsGrid = ({ data }) => {
                                                 gutterBottom
                                                 variant="subtitle1"
                                                 component="div"
+                                                sx={{
+                                                    overflowWrap: 'break-word',
+                                                    maxWidth:1000
+                                                }}
                                             >
                                                 {` ${order.comment}`}
                                             </Typography>

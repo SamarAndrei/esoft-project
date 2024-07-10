@@ -94,13 +94,11 @@ class UserModel {
     async update(id, userData) {
         try {
             const query = pool('users');
-            const user = await query.where('id', id).update(
-                {
-                    name: userData.name,
-                    email: userData.email,
-                    password: userData.password,
-                }
-            );
+            const user = await query.where('id', id).update({
+                name: userData.name,
+                email: userData.email,
+                password: userData.password,
+            });
             return user;
         } catch (err) {
             console.error('Error fetching user by ID', err);
@@ -120,6 +118,16 @@ class UserModel {
             ApiError.BadConnectToDB(errors.array());
         } finally {
             // await pool.destroy();
+        }
+    }
+
+    async deleteByEmailForTest(email) {
+        try {
+            const query = pool('users');
+            await query.where('email', email).delete();
+        } catch {
+            console.error('Error fetching user by Email', err);
+            ApiError.BadConnectToDB(errors.array());
         }
     }
 }
