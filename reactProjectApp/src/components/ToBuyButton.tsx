@@ -72,6 +72,7 @@ const ToBuyButton = () => {
     return (
         <>
             <Button
+                disabled={data.length <= 0}
                 size="large"
                 color="secondary"
                 variant="contained"
