@@ -75,7 +75,7 @@ app.use('/api', favouritesRoutes(favouritesController));
 app.use('/api', ordersRoutes(ordersController));
 
 app.use(errorMiddleware);
-app.listen(port, 'localhost', () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening at http://localhost:${port}`);
     try {
         redisClient
