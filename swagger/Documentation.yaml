@@ -1,0 +1,1037 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI спецификация для проекта "ХасбикМегаМакрет"
+  description: Спецификация для проведения обучения по проектированию и тестированию API
+  version: 0.1.0
+  contact:
+    name: Samar Andrei
+    url: https://github.com/SamarAndrei/esoft-project
+servers:
+  - url: http://localhost:3000/api/
+    description: Dev server
+tags:
+  - name: Production
+    description: All methods about Production
+  - name: User
+    description: Operations about user
+  - name: Cart
+    description: Operations about cart
+  - name: Favourites
+    description: Operations about favourite list
+  - name: Orders
+    description: Operations about orders
+  - name: Comments
+    description: Operations about comments
+
+paths:
+  /production:
+    get:
+      summary: Получение всей продукции
+      tags:
+        - Production
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Production"
+        '400':
+          description: Ошибка, связанная с базой данных
+        '500':
+          description: Непредвиденная ошибка
+    post:
+      summary: Создание элемента продукции
+      tags:
+        - Production
+      security:
+        - adminAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Production'
+              
+      responses:
+        '200':
+          description: Успешное создание элемента продукции
+        '400':
+          description: Ошибка валидации или связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '403':
+          description: Доступ запрещен
+        '500':
+          description: Непредвиденная ошибка
+
+  /production/{prod_id}:
+    get:
+      summary: Получение продукции по ID
+      tags:
+        - Production
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        '400':
+          description: Ошибка, связанная с базой данных
+        '404':
+          description: Продукция не найдена
+        '500':
+          description: Непредвиденная ошибка
+    put:
+      summary: Обновление элемента продукции по ID
+      tags:
+        - Production
+      security:
+        - adminAuth: []
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Успешное обновление элемента продукции
+        '400':
+          description: Ошибка валидации или связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Элемент продукции не найден
+        '500':
+          description: Непредвиденная ошибка
+
+  /registration:
+    post:
+      tags:
+        - User
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignUpForm"
+      responses:
+        '200':
+          description: Успешная регистрация
+        '400':
+          description: Пользователь с почтовым адресом уже существует, некорректные данные запроса или ошибка, связанная с базой данных
+  
+  /login:
+    post:
+      tags:
+        - User
+      summary: Вход пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLoginForm"
+      responses:
+        '200':
+          description: Успешный вход
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неправильный email или пароль
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Неправильный email или пароль"
+
+  /logout:
+    post:
+      tags:
+        - User
+      summary: Выход пользователя
+      responses:
+        '200':
+          description: Успешный выход
+      security:
+            - userAuth: []
+  
+  /refresh:
+    get:
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: header
+          required: true
+          schema:
+            type: string
+      summary: Обновление токена обновления
+      responses:
+        '200':
+          description: Успешное обновление токена
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Неавторизованный запрос"
+      security:
+        - userAuth: []
+        
+  
+  
+  /creatingRole:
+    post:
+      tags:
+        - User
+      summary: Создание роли (доступно только администраторам)
+      parameters:
+        - name: id
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignUpForm"
+      responses:
+        '200':
+          description: Успешное создание роли
+        '400':
+          description: Пользователь с почтовым адресом уже существует, некорректные данные запроса или ошибка, связанная с базой данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Ошибка валидации"
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        param:
+                          type: string
+                        msg:
+                          type: string
+                        value:
+                          type: string
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Доступ запрещен"
+      security:
+        - adminAuth: []
+  
+  /users/{id}: 
+    get:
+      summary: Получение пользователя по ID
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '403':
+          description: Доступ запрещен
+        '404':
+          description: Пользователь не найден
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - adminAuth: []
+  
+  /users:
+    get:
+      summary: Получение списка пользователей
+      tags:
+        - User
+      responses:
+        '200':
+          description: Успешная операция
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        '400':
+          description: Ошибка связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '403':
+          description: Доступ запрещен
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - adminAuth: []
+    put:
+      summary: Обновление текущего пользователя
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignUpForm"
+      responses:
+        '200':
+          description: Успешное обновление пользователя
+        '400':
+          description: Некорректные данные запроса или ошибка, связанная с базой данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Ошибка валидации"
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        param:
+                          type: string
+                        msg:
+                          type: string
+                        value:
+                          type: string
+        '401':
+          description: Неавторизованный запрос
+        '403':
+          description: Доступ запрещен
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+        
+  /production/{prod_id}/cart:
+    post:
+      summary: Добавление товара в корзину
+      tags:
+        - Cart
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        '200':
+          description: Успешное добавление товара в корзину
+        '400':
+          description: Некорректные данные запроса или ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '404':
+          description: Продукт не найден
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+
+    delete:
+      summary: Удаление товара из корзины
+      tags:
+        - Cart
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное удаление товара из корзины
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '404':
+          description: Продукт не найден в корзине
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+
+  /cart:
+    get:
+      summary: Получение содержимого корзины
+      tags:
+        - Cart
+      responses:
+        '200':
+          description: Успешное получение содержимого корзины
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CartItem"
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+        
+  /production/{prod_id}/favourites:
+    post:
+      summary: Добавление товара в избранное
+      tags:
+        - Favourites
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное добавление товара в корзину
+        '400':
+          description: Некорректные данные запроса или ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '404':
+          description: Продукт не найден
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+
+    delete:
+      summary: Удаление товара из избранного
+      tags:
+        - Favourites
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное удаление товара из корзины
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '404':
+          description: Продукт не найден в корзине
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+
+  /favourites:
+    get:
+      summary: Получение содержимого избранного
+      tags:
+        - Favourites
+      responses:
+        '200':
+          description: Успешное получение содержимого корзины
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FavouriteItem"
+        '400':
+          description: Ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+  
+  /orders:
+    post:
+      summary: Создание нового заказа
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderRequest"
+      responses:
+        '200':
+          description: Успешное создание заказа
+        '400':
+          description: Некорректные данные запроса или ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+
+
+    get:
+      summary: Получение всех заказов
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Успешное получение списка заказов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+        '401':
+          description: Неавторизованный запрос
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+
+  /orders/{order_id}:
+    get:
+      summary: Получение содержимого заказа
+      tags:
+        - Orders
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное получение заказа
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderItem"
+        '400':
+          description: Ошибка связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '404':
+          description: Заказ не найден
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+        
+  /production/{prod_id}/comments:
+    post:
+      summary: Создание комментария к продукту
+      tags:
+        - Comments
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 123
+            description: Идентификатор продукта, к которому добавляется комментарий
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  minLength: 25
+                  example: "Отличные кроссовки, удобные и стильные!"
+                  description: Текст комментария (минимум 25 символов)
+                rating:
+                  type: number
+                  minimum: 0
+                  maximum: 5
+                  example: 4.5
+                  description: Рейтинг продукта (от 0 до 5)
+      responses:
+        '200':
+          description: Комментарий успешно создан
+        '400':
+          description: Ошибка валидации данных или ошибка, связанная с базой данных
+        '401':
+          description: Неавторизованный запрос
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - userAuth: []
+    
+    get:
+      summary: Получение комментариев к продукту по ID продукта
+      tags:
+        - Comments
+      parameters:
+        - name: prod_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 123
+            description: Идентификатор продукта, комментарии к которому необходимо получить
+      responses:
+        '200':
+          description: Успешное получение комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+        '400':
+          description: Ошибка связанная с базой данных
+        '404':
+          description: Продукт или комментарии к нему не найдены
+        '500':
+          description: Непредвиденная ошибка
+
+  /comments:
+    get:
+      summary: Получение всех комментариев
+      tags:
+        - Comments
+      responses:
+        '200':
+          description: Успешное получение всех комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+        '401':
+          description: Неавторизованный запрос
+        '403':
+          description: Доступ запрещен для текущего пользователя
+        '500':
+          description: Непредвиденная ошибка
+      security:
+        - adminAuth: []
+
+components:
+  schemas:
+    Production:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        brand:
+          type: string
+          maxLength: 55
+          example: "Adibas"
+        size:
+          type: array
+          items:
+            type: string
+          example:
+            - "S"
+            - "M"
+            - "L"
+        type:
+          type: string
+          maxLength: 55
+          example: "Обувь"
+        description:
+          type: string
+        img:
+          type: array
+          items:
+            type: string
+          example:
+            - "https://example.com/image1.jpg"
+            - "https://example.com/image2.jpg"
+        price:
+          type: integer
+          example: 1000
+        stock_quantity:
+          type: integer
+          default: 0
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        brand:
+          type: string
+          maxLength: 55
+          example: "Adibas"
+        size:
+          type: array
+          items:
+            type: string
+          example:
+            - "S"
+            - "M"
+            - "L"
+        type:
+          type: string
+          maxLength: 55
+          example: "Обувь"
+        description:
+          type: string
+        img:
+          type: array
+          items:
+            type: string
+          example:
+            - "https://example.com/image1.jpg"
+            - "https://example.com/image2.jpg"
+        price:
+          type: integer
+          example: 1000
+        stock_quantity:
+          type: integer
+          default: 0
+        averageRating:
+          type: number
+          example: 3.5
+      required:
+        - brand
+        - type
+        - description
+        - img
+        - price
+    UserSignUpForm:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+    UserLoginForm:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        role_id:
+          type: integer
+        registration_date:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        brand:
+          type: string
+          maxLength: 55
+          example: "Adibas"
+        size:
+          type: array
+          items:
+            type: string
+          example:
+            - "S"
+            - "M"
+            - "L"
+        type:
+          type: string
+          maxLength: 55
+          example: "Обувь"
+        description:
+          type: string
+        img:
+          type: array
+          items:
+            type: string
+          example:
+            - "https://example.com/image1.jpg"
+            - "https://example.com/image2.jpg"
+        price:
+          type: integer
+          example: 1000
+        stock_quantity:
+          type: integer
+          default: 0
+        quantity:
+          type: number
+          example: 2
+      required:
+        - brand
+        - type
+        - description
+        - img
+        - price
+    FavouriteItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        brand:
+          type: string
+          maxLength: 55
+          example: "Adibas"
+        size:
+          type: array
+          items:
+            type: string
+          example:
+            - "S"
+            - "M"
+            - "L"
+        type:
+          type: string
+          maxLength: 55
+          example: "Обувь"
+        description:
+          type: string
+        img:
+          type: array
+          items:
+            type: string
+          example:
+            - "https://example.com/image1.jpg"
+            - "https://example.com/image2.jpg"
+        price:
+          type: integer
+          example: 1000
+        stock_quantity:
+          type: integer
+          default: 0
+      required:
+        - brand
+        - type
+        - description
+        - img
+        - price
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор заказа
+        user_id:
+          type: integer
+          description: Идентификатор пользователя, связанный с заказом
+        status:
+          type: string
+          maxLength: 55
+          default: "Не оплачен"
+          description: Статус заказа
+        updatedAt:
+          type: string
+          format: date-time
+          description: Время последнего обновления заказа
+        createdAt:
+          type: string
+          format: date-time
+          description: Время создания заказа
+      required:
+        - user_id
+        - status
+        - updatedAt
+        - createdAt
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+          description: Уникальный идентификатор продукта
+        brand:
+          type: string
+          example: "Adibas"
+          description: Бренд продукта
+        description:
+          type: string
+          example: "Description кроссовки"
+          description: Описание продукта
+        gender:
+          type: string
+          example: "Мужское"
+          description: Пол продукта
+        img:
+          type: array
+          items:
+            type: string
+          example:
+            - "https://a.lmcdn.ru/img389x562/M/P/MP002XM00KF6_23294896_1_v1.jpg"
+          description: Ссылки на изображения продукта
+        order_id:
+          type: integer
+          example: 2
+          description: Идентификатор заказа, к которому относится продукт
+        price:
+          type: integer
+          example: 4179
+          description: Цена продукта
+        prod_id:
+          type: integer
+          example: 3
+          description: Идентификатор продукта
+        quantity:
+          type: integer
+          example: 1
+          description: Количество продукта в заказе
+        size:
+          type: array
+          items:
+            type: string
+          example:
+            - "40"
+            - "41"
+            - "42"
+          description: Доступные размеры продукта
+        stock_quantity:
+          type: integer
+          example: 10
+          description: Доступное количество продукта на складе
+        type:
+          type: string
+          example: "Обувь"
+          description: Тип продукта
+    OrderRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус заказа
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+      required:
+        - status
+        - cartItems
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор комментария
+        user_id:
+          type: integer
+          description: Идентификатор пользователя, оставившего комментарий
+        prod_id:
+          type: integer
+          description: Идентификатор продукта, к которому относится комментарий
+        comment:
+          type: string
+          description: Текст комментария
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          description: Рейтинг продукта (от 0 до 5)
+        createdAt:
+          type: string
+          format: date-time
+          description: Дата и время создания комментария
+  
+  securitySchemes:
+    userAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    adminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
