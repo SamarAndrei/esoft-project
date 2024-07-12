@@ -3,7 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const errorMiddleware = require('./middleware/errorMiddleware.ts');
 require('dotenv').config();
-const path = require('path');
+// const path = require('path');
 
 const { redisClient } = require('./redis.js');
 
@@ -20,24 +20,24 @@ app.use(
 app.use(cookieParser());
 const __dirname1 = path.resolve();
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname1, '../reactProjectApp/dist')));
+// if (process.env.NODE_ENV === 'production') {
+//     app.use(express.static(path.join(__dirname1, '../reactProjectApp/dist')));
 
-    app.get('*', (req, res) =>
-        res.sendFile(
-            path.resolve(
-                __dirname1,
-                '../reactProjectApp',
-                'dist',
-                'index.html',
-            ),
-        ),
-    );
-} else {
-    app.get('/', (req, res) => {
-        res.send('API is running..');
-    });
-}
+//     app.get('*', (req, res) =>
+//         res.sendFile(
+//             path.resolve(
+//                 __dirname1,
+//                 '../reactProjectApp',
+//                 'dist',
+//                 'index.html',
+//             ),
+//         ),
+//     );
+// } else {
+//     app.get('/', (req, res) => {
+//         res.send('API is running..');
+//     });
+// }
 
 const RolesModel = require('./reposio/rolesDal');
 const UserModel = require('./reposio/userDal');
