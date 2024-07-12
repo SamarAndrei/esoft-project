@@ -6,10 +6,8 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-// import MapGL from './Map/Maps'; когда нибудь разобраться
 import Socials from './Socials';
 import React from 'react';
-
 const GridContent = styled('div')(({ theme }) => ({
     position: 'relative',
     marginBottom: theme.spacing(5),
@@ -64,7 +62,6 @@ const Footer = React.memo(() => {
                 </Grid>
                 <Socials />
             </Container>
-            {/* <MapGL/> */}
         </footer>
     );
 });

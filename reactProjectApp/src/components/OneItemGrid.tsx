@@ -63,7 +63,7 @@ const OneItemGrid: React.FC<{ data: CardType }> = ({ data }) => {
     };
 
     const EnhancedCommentsGrid = withDataFetching(
-        `http://localhost:3000/api/production/${data.id}/comments`,
+        `https://esoft-project-app-api.onrender.com/${data.id}/comments`,
     )(CommentsGrid);
 
     return (

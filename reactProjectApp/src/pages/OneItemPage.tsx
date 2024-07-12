@@ -6,7 +6,7 @@ const OneItemPage = () => {
     const { itemId } = useParams();
 
     const EnhancedOneItemGrid = withDataFetching(
-        `http://localhost:3000/api/production/${itemId}`,
+        `https://esoft-project-app-api.onrender.com/production/${itemId}`,
     )(OneItemGrid);
 
     return <EnhancedOneItemGrid />;

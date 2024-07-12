@@ -11,10 +11,9 @@
         "test:unit": "jest",
         "wdio": "wdio run ./wdio.conf.js",
         "test:e2e": "npx wdio run ./wdio.conf.js",
-        "start":"vite"
+        "start": "vite"
     },
     "dependencies": {
-        "@2gis/mapgl": "^1.47.1",
         "@emotion/react": "^11.11.4",
         "@emotion/styled": "^11.11.5",
         "@mui/icons-material": "^5.15.19",
@@ -45,11 +44,11 @@
         "@typescript-eslint/eslint-plugin": "^7.2.0",
         "@typescript-eslint/parser": "^7.2.0",
         "@vitejs/plugin-react-swc": "^3.5.0",
-        "@wdio/cli": "^8.39.1",
-        "@wdio/local-runner": "^8.39.1",
+        "@wdio/cli": "^7.16.4",
+        "@wdio/local-runner": "^7.16.4",
         "@wdio/mocha-framework": "^8.39.0",
         "@wdio/spec-reporter": "^8.39.0",
-        "@wdio/visual-service": "^5.1.0",
+        "@wdio/visual-service": "^4.1.0",
         "babel-jest": "^29.7.0",
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.1.0",

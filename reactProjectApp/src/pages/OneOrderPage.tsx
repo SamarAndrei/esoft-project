@@ -6,7 +6,7 @@ const OneOrderPage = () => {
     const { orderId } = useParams();
 
     const EnhancedOrdersItems = withDataFetching(
-        `http://localhost:3000/api/orders/${orderId}`,
+        `https://esoft-project-app-api.onrender.com/orders/${orderId}`,
     )(OrderItems);
 
     return <EnhancedOrdersItems />;
