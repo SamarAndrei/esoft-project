@@ -3,7 +3,6 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const errorMiddleware = require('./middleware/errorMiddleware.ts');
 require('dotenv').config();
-const path = require('path');
 
 const { redisClient } = require('./redis.js');
 
