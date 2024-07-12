@@ -51,7 +51,7 @@ const HomePage = () => {
 };
 
 const EnhancedProductionGrid = withDataFetching(
-    'https://esoft-project-app-api.onrender.com/production',
+    'https://esoft-project-app-api.onrender.com/api/production',
 )(ProductionGrid);
 
 export default HomePage;
