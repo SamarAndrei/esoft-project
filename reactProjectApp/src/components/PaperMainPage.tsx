@@ -13,7 +13,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     position: 'relative',
     color: theme.palette.common.white,
     marginBottom: theme.spacing(4),
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(7),
 
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',

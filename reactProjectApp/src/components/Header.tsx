@@ -42,9 +42,7 @@ const Header = React.memo(() => {
                                 <MenuIcon />
                             </IconButton>
                             <Link href="/" color="inherit" underline="none">
-                                <Typography variant="h6">
-                                    ХасбикМегаМаркет
-                                </Typography>
+                                <Typography variant="h6">ХММ</Typography>
                             </Link>
                             <InputSearch />
                             <Box sx={{ flexGrow: 1 }} />

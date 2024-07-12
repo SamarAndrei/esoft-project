@@ -9,7 +9,7 @@ const BlockDescription = () => {
                 color="textPrimary"
                 gutterBottom
             >
-                ХасбикМегаМаркет
+                ХММ
             </Typography>
             <Typography
                 variant="h5"
