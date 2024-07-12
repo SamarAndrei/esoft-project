@@ -107,7 +107,7 @@ class ProdModel {
 
             if (product) {
                 await redisClient.set(redisKey, JSON.stringify(product), {
-                    EX: 20,
+                    EX: 5,
                 });
             }
 
