@@ -48,7 +48,6 @@ class UserController {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
             });
 
             res.status(200).json(tokens);
@@ -81,7 +80,6 @@ class UserController {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
             });
 
             res.status(200).json(tokens);
@@ -111,7 +109,6 @@ class UserController {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
             });
 
             res.status(200).json(tokens);
